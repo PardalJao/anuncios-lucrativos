@@ -1,0 +1,10 @@
+# Vercel
+.vercel
+.env*
+
+# macOS
+.DS_Store
+
+# masters de vídeo — ficam na máquina para reencodar se precisar;
+# o que vai para o ar são as versões otimizadas em assets/video/
+assets/video/_orig/

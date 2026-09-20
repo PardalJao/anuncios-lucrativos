@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Programa Anúncios Lucrativos — Bruno Freitas</title>
+<meta name="description" content="Copie e cole o sistema de anúncios que já venderam milhões para negócios locais, serviços, e-commerce e infoprodutos.">
+<meta name="theme-color" content="#f7f4ee">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Programa Anúncios Lucrativos — Bruno Freitas">
+<meta property="og:description" content="Hooks vencedores, ângulos validados e formatos campeões. Um sistema baseado no que já vendeu.">
+<meta property="og:image" content="assets/img/hero-poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/sentient-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/dm-sans-regular.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=5">
+<script src="js/config.js?v=5" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="js/main.js?v=5" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- Sprite de ícones. Todos desenhados: glifos como ↗ ✳ ➔ têm variante
+     emoji e o iOS os renderiza coloridos, quebrando o visual. -->
+<svg class="sprite" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-ne" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
+  <symbol id="i-e" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 7"/></symbol>
+  <symbol id="i-hook" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1"/></symbol>
+  <symbol id="i-angulo" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
+  <symbol id="i-formato" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18"/></symbol>
+  <symbol id="i-biblio" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M13 4v16M18 4v16"/></symbol>
+</defs></svg>
+
+
+<!-- ── preloader: palavra em serif ciclando + % + barra ────────── -->
+<div class="preloader" data-preloader role="status" aria-label="Carregando">
+  <span class="preloader__mark" data-pre-mark aria-hidden="true"><i></i><i></i><i></i></span>
+  <p class="preloader__word" data-pre-word aria-hidden="true"><span>Atenção</span></p>
+  <span class="preloader__pct" data-pre-pct>0%</span>
+  <span class="preloader__bar" data-pre-bar aria-hidden="true"></span>
+</div>
+
+<header class="header" data-header>
+  <nav class="nav wrap" aria-label="Navegação principal">
+    <a class="brand" href="#topo" aria-label="Anúncios Lucrativos — início">
+      <span class="brand__mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span>Anúncios<span>Lucrativos</span></span>
+    </a>
+    <div class="nav__pill" id="nav-menu" data-navpill>
+      <span class="nav__indicator" data-navindicator aria-hidden="true"></span>
+      <a class="nav__item" href="#programa"><span class="nav__label nav__link">O programa</span></a>
+      <a class="nav__item" href="#bonus"><span class="nav__label nav__link">Bônus</span></a>
+      <a class="nav__item" href="#resultados"><span class="nav__label nav__link">Resultados</span></a>
+      <a class="nav__item" href="#sobre"><span class="nav__label nav__link">Quem ensina</span></a>
+      <a class="nav__item" href="#faq"><span class="nav__label nav__link">Dúvidas</span></a>
+    </div>
+    <a class="btn btn--small nav__cta" href="#oferta" data-cta>Garantir minha vaga</a>
+    <button class="nav__toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir menu">
+      <span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<main id="conteudo">
+
+<!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+<section class="hero" id="topo" aria-labelledby="hero-title">
+  <div class="hero__media" aria-hidden="true">
+    <video class="hero__video" autoplay muted loop playsinline preload="none"
+           poster="assets/img/hero-poster.jpg"
+           data-src="assets/video/hero-loop.mp4"
+           data-src-sm="assets/video/hero-loop-sm.mp4"></video>
+  </div>
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <div class="hero__copy">
+      <p class="pill reveal">
+        <span class="avatares" aria-hidden="true">
+          <span class="avatar" style="--i:0"></span>
+          <span class="avatar" style="--i:1"></span>
+          <span class="avatar" style="--i:2"></span>
+          <span class="avatar" style="--i:3"></span>
+          <span class="avatar avatar--mais" style="--i:4">+</span>
+        </span>
+        Programa Anúncios Lucrativos
+      </p>
+      <h1 class="hero__title" id="hero-title">
+        <span class="line"><span>Copie o sistema</span></span>
+        <span class="line"><span>de anúncios que já</span></span>
+        <span class="line"><span><em>venderam milhões.</em></span></span>
+      </h1>
+      <p class="hero__lead reveal">Hooks vencedores, ângulos validados e formatos campeões para negócios locais, serviços, e-commerce e infoprodutos.</p>
+      <div class="hero__cta reveal">
+        <a class="btn" href="#oferta">Conhecer o programa <span class="btn__icon" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></span></a>
+      </div>
+      <p class="hero__note reveal">Conteúdo prático · 7 dias de garantia</p>
+    </div>
+
+    <div class="showcase reveal" data-par="0.06">
+      <div class="preview">
+        <svg class="ondas" viewBox="0 0 420 380" aria-hidden="true">
+          <g transform="translate(300 190)">
+            <ellipse style="--o:0" rx="42"  ry="34"/>
+            <ellipse style="--o:1" rx="78"  ry="64"/>
+            <ellipse style="--o:2" rx="116" ry="95"/>
+            <ellipse style="--o:3" rx="154" ry="126"/>
+            <ellipse style="--o:4" rx="192" ry="157"/>
+            <ellipse style="--o:5" rx="230" ry="188"/>
+          </g>
+        </svg>
+        <div class="preview__top">
+          <span class="eyebrow">Da ideia ao anúncio</span>
+          <span class="preview__live"><span class="dot" aria-hidden="true"></span> Método em 3 camadas</span>
+        </div>
+        <p class="preview__title">Um bom anúncio<br> começa com <em>clareza.</em></p>
+        <div class="flow">
+          <div class="flow__card" style="--etapa:0">
+            <span class="flow__icon" aria-hidden="true"><svg class="ico ico--lg" aria-hidden="true"><use href="#i-hook"/></svg></span>
+            <small>01 / Atenção</small><strong>Hook</strong><span>Faça parar.</span>
+          </div>
+          <span class="flow__arrow" style="--etapa:1" aria-hidden="true">
+            <svg viewBox="0 0 34 12"><path class="flow__base" d="M1 6 H26"/><path class="flow__base" d="M23 2 L29 6 L23 10"/><path class="flow__line" d="M1 6 H26"/><path class="flow__head" d="M23 2 L29 6 L23 10"/></svg>
+          </span>
+          <div class="flow__card" style="--etapa:1">
+            <span class="flow__icon" aria-hidden="true"><svg class="ico ico--lg" aria-hidden="true"><use href="#i-angulo"/></svg></span>
+            <small>02 / Perspectiva</small><strong>Ângulo</strong><span>Faça se conectar.</span>
+          </div>
+          <span class="flow__arrow" style="--etapa:2" aria-hidden="true">
+            <svg viewBox="0 0 34 12"><path class="flow__base" d="M1 6 H26"/><path class="flow__base" d="M23 2 L29 6 L23 10"/><path class="flow__line" d="M1 6 H26"/><path class="flow__head" d="M23 2 L29 6 L23 10"/></svg>
+          </span>
+          <div class="flow__card" style="--etapa:2">
+            <span class="flow__icon" aria-hidden="true"><svg class="ico ico--lg" aria-hidden="true"><use href="#i-formato"/></svg></span>
+            <small>03 / Expressão</small><strong>Formato</strong><span>Dê vida à ideia.</span>
+          </div>
+        </div>
+        <div class="preview__bottom">
+          <span>Repertório. Estratégia. Aplicação.</span><span aria-hidden="true">AL</span>
+        </div>
+      </div>
+
+      <figure class="author par-box" data-par-child="0.1">
+        <video class="v-loop" muted loop playsinline preload="none"
+               poster="assets/img/bruno-loop-poster.webp"
+               data-src="assets/video/bruno-loop.mp4"
+               data-src-sm="assets/video/bruno-loop-sm.mp4"
+               width="640" height="1138"
+               aria-label="Bruno Freitas, criador do Programa Anúncios Lucrativos"></video>
+        <figcaption>
+          <span>Quem vai te ensinar</span>
+          <strong>Bruno Freitas</strong>
+          <a href="#sobre">Conheça a trajetória <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="trust">
+      <p>Anos criando estratégias e anúncios<br> para grandes nomes e negócios</p>
+      <div class="trust__viewport">
+        <ul class="trust__track" data-marquee aria-label="Marcas e nomes atendidos">
+          <li>G4 Educação</li><li>Atom</li><li>Carol Paiffer</li>
+          <li>Henrique Fogaça</li><li>Neymar Pai</li><li>Paulo Guedes</li>
+          <li>Mercado americano</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ AGITAÇÃO ═══════════════════════════ -->
+<section class="sec sec--white agita" aria-labelledby="agita-title">
+  <div class="wrap">
+    <div class="agita__grid">
+      <div>
+        <p class="eyebrow reveal">O problema</p>
+        <h2 class="agita__text" id="agita-title">
+          <span class="w w--sm">Pare de queimar dinheiro em anúncios na tentativa e erro</span>
+          <span class="w w--sm">e desperdiçar horas da sua equipe tentando descobrir o que funciona.</span>
+        </h2>
+      </div>
+      <p class="agita__aside reveal">Antes de vender qualquer coisa, você precisa conquistar alguns segundos da atenção de alguém. E isso ficou muito mais difícil.</p>
+    </div>
+    <p class="agita__saida"><em>Siga um sistema baseado no que já vendeu.</em></p>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PILARES ════════════════════════════ -->
+<section class="sec pilares" id="metodo" aria-labelledby="pilares-title">
+  <div class="wrap">
+    <div class="sec__head">
+      <div>
+        <p class="eyebrow reveal">01 — O sistema</p>
+        <h2 class="sec__title" id="pilares-title">Três camadas.<br> Uma decisão <em>de cada vez.</em></h2>
+      </div>
+      <p class="sec__intro reveal">O Hook é a arte de chamar atenção e atrair a pessoa certa, o Ângulo define a perspectiva pela qual você apresenta a sua ideia, e o Formato é a maneira como essa ideia ganha vida no anúncio.</p>
+    </div>
+
+    <div class="pilares__stage">
+      <article class="pilar">
+        <div class="pilar__art art--hook" aria-hidden="true"><span></span><span></span><span></span><b><svg class="ico" aria-hidden="true"><use href="#i-hook"/></svg></b></div>
+        <div class="pilar__body">
+          <p class="pilar__num"><span data-count="100" data-suffix="">100</span><sup>+</sup></p>
+          <h3>Hooks Vencedores</h3>
+          <p class="pilar__desc">A atenção é o maior ativo hoje em dia. Aqui você vai aprender como realmente chamar atenção, fugir do óbvio e fazer seus anúncios se destacarem no meio de tantos concorrentes.</p>
+          <span class="pilar__foot">01 / Chame atenção</span>
+        </div>
+      </article>
+
+      <article class="pilar">
+        <div class="pilar__art art--angulo" aria-hidden="true"><span></span><span></span><span></span><b><svg class="ico" aria-hidden="true"><use href="#i-angulo"/></svg></b></div>
+        <div class="pilar__body">
+          <p class="pilar__num"><span data-count="57" data-suffix="">57</span></p>
+          <h3>Ângulos Validados</h3>
+          <p class="pilar__desc">57 maneiras de apresentar a mesma ideia de formas diferentes, explorando novos desejos, dores e públicos sem repetir sempre o mesmo argumento.</p>
+          <span class="pilar__foot">02 / Mude a perspectiva</span>
+        </div>
+      </article>
+
+      <article class="pilar">
+        <div class="pilar__art art--formato" aria-hidden="true"><span></span><span></span><span></span><b><svg class="ico" aria-hidden="true"><use href="#i-formato"/></svg></b></div>
+        <div class="pilar__body">
+          <p class="pilar__num"><span data-count="25" data-suffix="">25</span><sup>+</sup></p>
+          <h3>Formatos Campeões</h3>
+          <p class="pilar__desc">Os principais formatos validados de anúncios, com exemplos práticos para você transformar boas ideias em criativos que chamam atenção, vendem e ainda posicionam sua marca de forma diferente no mercado.</p>
+          <span class="pilar__foot">03 / Dê vida à ideia</span>
+        </div>
+      </article>
+    </div>
+
+    <div class="publico reveal">
+      <span>Pensado para diferentes negócios</span>
+      <ul><li>Negócios locais</li><li>Serviços</li><li>E-commerce</li><li>Infoprodutos</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ ENTREGÁVEIS (trilho) ════════════════════ -->
+<section class="sec sec--white entregaveis" id="programa" aria-labelledby="entreg-title">
+  <span class="sec__veil" data-layer-veil aria-hidden="true"></span>
+  <div class="wrap">
+    <div class="sec__head">
+      <div>
+        <p class="eyebrow reveal">02 — O que você recebe</p>
+        <h2 class="sec__title" id="entreg-title">Veja o que você vai receber<br> ao entrar no <em>Programa.</em></h2>
+      </div>
+      <p class="sec__intro reveal">Sete entregáveis que se complementam: três bibliotecas, uma ferramenta e três aulas em vídeo.</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="trilho" data-hscroll>
+      <div class="trilho__track" data-htrack>
+        <article class="card">
+          <div class="card__top"><span class="card__num">01</span><span class="card__kind">Biblioteca</span></div>
+          <div class="card__art"><svg class="art-hooks" viewBox="0 0 220 104" aria-hidden="true">
+            <g transform="translate(110 16)">
+              <path class="isca-linha" d="M0 0 V30"/>
+              <path class="isca-anzol" d="M0 30 V52 a16 16 0 1 1 -22 0"/>
+              <path class="isca-farpa" d="M-22 44 l-7 9 l10 1"/>
+              <circle class="isca-brilho" data-fill cx="-22" cy="52" r="3"/>
+            </g>
+            <g class="isca-agua">
+              <path d="M34 86 q16 -7 32 0 t32 0 t32 0 t32 0 t32 0"/>
+              <path d="M34 94 q16 -7 32 0 t32 0 t32 0 t32 0 t32 0"/>
+            </g>
+          </svg></div>
+          <h3>+100 Hooks Vencedores</h3>
+          <p>A atenção é o maior ativo hoje em dia. Aqui você vai aprender como realmente chamar atenção, fugir do óbvio e fazer seus anúncios se destacarem no meio de tantos concorrentes.</p>
+          <span class="card__foot">Chamar atenção</span>
+        </article>
+
+        <article class="card">
+          <div class="card__top"><span class="card__num">02</span><span class="card__kind">Biblioteca</span></div>
+          <div class="card__art"><svg class="art-angulos" viewBox="0 0 220 104" aria-hidden="true">
+            <g transform="translate(96 52)">
+              <rect x="-30" y="-24" width="60" height="48" rx="5"/>
+              <rect x="-30" y="-24" width="60" height="48" rx="5"/>
+              <rect x="-30" y="-24" width="60" height="48" rx="5"/>
+            </g>
+            <g class="ang-check" transform="translate(166 62)">
+              <circle r="15"/>
+              <path class="ang-tick" d="M-7 0 l5 6 l9 -12"/>
+            </g>
+          </svg></div>
+          <h3>57 Ângulos Validados</h3>
+          <p>57 maneiras de apresentar a mesma ideia de formas diferentes, explorando novos desejos, dores e públicos sem repetir sempre o mesmo argumento.</p>
+          <span class="card__foot">Mudar a perspectiva</span>
+        </article>
+
+        <article class="card">
+          <div class="card__top"><span class="card__num">03</span><span class="card__kind">Biblioteca</span></div>
+          <div class="card__art"><svg class="art-formatos" viewBox="0 0 220 104" aria-hidden="true">
+            <g transform="translate(88 52)">
+              <rect x="-20" y="-26" width="40" height="52" rx="5"/>
+              <rect x="-20" y="-26" width="40" height="52" rx="5"/>
+              <rect x="-20" y="-26" width="40" height="52" rx="5"/>
+            </g>
+            <g class="fmt-trofeu" transform="translate(164 46)">
+              <path d="M-13 -14 h26 v10 a13 13 0 0 1 -26 0 z"/>
+              <path d="M-13 -10 h-7 a7 7 0 0 0 7 7"/>
+              <path d="M13 -10 h7 a7 7 0 0 1 -7 7"/>
+              <path d="M0 9 v9 M-9 20 h18"/>
+            </g>
+          </svg></div>
+          <h3>+25 Formatos Campeões</h3>
+          <p>Os principais formatos validados de anúncios, com exemplos práticos para você transformar boas ideias em criativos que chamam atenção, vendem e ainda posicionam sua marca de forma diferente no mercado.</p>
+          <span class="card__foot">Dar vida à ideia</span>
+        </article>
+
+        <article class="card">
+          <div class="card__top"><span class="card__num">04</span><span class="card__kind">Ferramenta</span></div>
+          <div class="card__art"><svg class="art-matriz" viewBox="0 0 220 104" aria-hidden="true">
+            <g transform="translate(74 16)">
+              <rect x="0"  y="0"  width="20" height="20" rx="3"/><rect x="26" y="0"  width="20" height="20" rx="3"/><rect x="52" y="0"  width="20" height="20" rx="3"/>
+              <rect x="0"  y="26" width="20" height="20" rx="3"/><rect x="26" y="26" width="20" height="20" rx="3"/><rect x="52" y="26" width="20" height="20" rx="3"/>
+              <rect x="0"  y="52" width="20" height="20" rx="3"/><rect x="26" y="52" width="20" height="20" rx="3"/><rect x="52" y="52" width="20" height="20" rx="3"/>
+            </g>
+          </svg></div>
+          <h3>Matriz Estratégica dos Anúncios Lucrativos</h3>
+          <p>Anos de testes, aprendizados e análise de anúncios condensados em uma ferramenta para você saber o que criar, como pensar e qual caminho seguir em cada situação.</p>
+          <span class="card__foot">Decidir com direção</span>
+        </article>
+
+        <article class="card">
+          <div class="card__top"><span class="card__num">05</span><span class="card__kind">Aula</span></div>
+          <div class="card__art"><svg class="art-anatomia" viewBox="0 0 220 104" aria-hidden="true">
+            <g><rect x="76" y="22" width="68" height="16" rx="4"/></g>
+            <g><rect x="64" y="44" width="92" height="16" rx="4"/></g>
+            <g><rect x="82" y="66" width="56" height="16" rx="4"/></g>
+          </svg></div>
+          <h3>A Anatomia de um Anúncio Lucrativo</h3>
+          <p>Entenda o que realmente existe por trás de um bom anúncio e pare de criar peças bonitas que não conseguem prender atenção, convencer ou vender.</p>
+          <span class="card__foot">Aula em vídeo</span>
+        </article>
+
+        <article class="card">
+          <div class="card__top"><span class="card__num">06</span><span class="card__kind">Aula</span></div>
+          <div class="card__art"><svg class="art-multiplica" viewBox="0 0 220 104" aria-hidden="true">
+            <g class="mlt-trofeu" transform="translate(110 44)">
+              <path d="M-13 -14 h26 v10 a13 13 0 0 1 -26 0 z"/>
+              <path d="M-13 -10 h-7 a7 7 0 0 0 7 7"/>
+              <path d="M13 -10 h7 a7 7 0 0 1 -7 7"/>
+              <path d="M0 9 v9 M-9 20 h18"/>
+            </g>
+            <g transform="translate(110 46)">
+              <rect class="mlt-copia" x="-11" y="-11" width="22" height="22" rx="5" style="--dx:-58px;--dy:-6px"/>
+              <rect class="mlt-copia" x="-11" y="-11" width="22" height="22" rx="5" style="--dx:58px;--dy:-6px"/>
+              <rect class="mlt-copia" x="-11" y="-11" width="22" height="22" rx="5" style="--dx:-34px;--dy:26px"/>
+              <rect class="mlt-copia" x="-11" y="-11" width="22" height="22" rx="5" style="--dx:34px;--dy:26px"/>
+            </g>
+          </svg></div>
+          <h3>Como Multiplicar um Anúncio Vencedor</h3>
+          <p>Aprenda a transformar um único anúncio que funcionou em dezenas de novas variações, sem matar a ideia e sem precisar voltar para a folha em branco.</p>
+          <span class="card__foot">Aula em vídeo</span>
+        </article>
+
+        <article class="card">
+          <div class="card__top"><span class="card__num">07</span><span class="card__kind">Aula</span></div>
+          <div class="card__art"><svg class="art-ideias" viewBox="0 0 220 104" aria-hidden="true">
+            <g transform="translate(110 46)">
+              <path class="lamp-vidro" d="M0 -22 a18 18 0 0 1 11 32 v7 h-22 v-7 a18 18 0 0 1 11 -32 z"/>
+              <path class="lamp-base" d="M-9 20 h18 M-7 26 h14"/>
+              <path class="lamp-filamento" d="M-5 6 l4 -7 l3 6 l4 -7"/>
+              <g class="lamp-raios">
+                <path d="M0 -34 v-9"/><path d="M26 -24 l7 -6"/><path d="M-26 -24 l-7 -6"/>
+                <path d="M33 -2 h9"/><path d="M-33 -2 h-9"/>
+              </g>
+            </g>
+          </svg></div>
+          <h3>O Segredo para Encontrar Boas Ideias</h3>
+          <p>Descubra onde encontrar referências e ideias de anúncios todos os dias, sem depender de inspiração ou esperar a criatividade aparecer.</p>
+          <span class="card__foot">Aula em vídeo</span>
+        </article>
+      </div>
+    </div>
+    <p class="trilho__hint">Arraste ou role para o lado</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════ BÔNUS ══════════════════════════════ -->
+<section class="sec sec--deep sec--layer" id="bonus" data-layer aria-labelledby="bonus-title">
+  <span class="sec__veil" data-layer-veil aria-hidden="true"></span>
+  <div class="wrap">
+    <div class="sec__head">
+      <div>
+        <p class="eyebrow reveal">Bônus</p>
+        <h2 class="sec__title" id="bonus-title">Bônus especiais ao<br> garantir sua vaga <em>hoje.</em></h2>
+      </div>
+      <p class="sec__intro reveal">Além dos sete entregáveis, três bônus para manter o repertório sempre à mão.</p>
+    </div>
+
+    <div class="bonus__grid reveal-stagger">
+      <article class="bonus">
+        <div class="bonus__top"><span class="bonus__icon" aria-hidden="true"><svg class="ico ico--lg" aria-hidden="true"><use href="#i-ne"/></svg></span><span>Bônus 01</span></div>
+        <h3>Monitorias mensais</h3>
+        <p>Tire dúvidas, analise seus anúncios e acompanhe novas estratégias e aprendizados diretamente comigo.</p>
+        <span class="bonus__tag">Troca e acompanhamento</span>
+      </article>
+
+      <article class="bonus">
+        <div class="bonus__top"><span class="bonus__icon" aria-hidden="true"><svg class="ico ico--lg" aria-hidden="true"><use href="#i-biblio"/></svg></span><span>Bônus 02</span></div>
+        <h3>(Biblioteca) Swipe File de Anúncios Vencedores</h3>
+        <p>Uma biblioteca com dezenas de anúncios reais para você usar como referência sempre que precisar criar um novo criativo.</p>
+        <span class="bonus__tag">Repertório sempre à mão</span>
+      </article>
+
+      <article class="bonus">
+        <div class="bonus__top"><span class="bonus__icon" aria-hidden="true"><svg class="ico ico--lg" aria-hidden="true"><use href="#i-hook"/></svg></span><span>Bônus 03</span></div>
+        <h3>Kit de Prompts para Criar Anúncios com IA</h3>
+        <p>Prompts prontos para gerar novos hooks, explorar ângulos, adaptar referências e multiplicar anúncios em poucos minutos.</p>
+        <span class="bonus__tag">IA com direção criativa</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PROVA ══════════════════════════════ -->
+<section class="sec sec--white sec--layer orbita" id="resultados" data-layer aria-labelledby="prova-title">
+  <span class="sec__veil" data-layer-veil aria-hidden="true"></span>
+  <div class="wrap">
+    <div class="orb" data-orb>
+      <a class="orb__item orb--el1" href="assets/img/prova-01-1200.webp" target="_blank" rel="noopener" aria-label="Ampliar registro 01">
+        <img src="assets/img/prova-01-480.webp" alt="Registro 01 de feedback recebido" width="800" height="1000" loading="lazy" decoding="async">
+      </a>
+      <a class="orb__item orb--el2" href="assets/img/prova-02-1200.webp" target="_blank" rel="noopener" aria-label="Ampliar registro 02">
+        <img src="assets/img/prova-02-480.webp" alt="Registro 02 de feedback recebido" width="800" height="1000" loading="lazy" decoding="async">
+      </a>
+      <a class="orb__item orb--el3" href="assets/img/prova-03-1200.webp" target="_blank" rel="noopener" aria-label="Ampliar registro 03">
+        <img src="assets/img/prova-03-480.webp" alt="Registro 03 de feedback recebido" width="800" height="1000" loading="lazy" decoding="async">
+      </a>
+      <a class="orb__item orb--el4" href="assets/img/prova-04-1200.webp" target="_blank" rel="noopener" aria-label="Ampliar registro 04">
+        <img src="assets/img/prova-04-480.webp" alt="Registro 04 de feedback recebido" width="800" height="1000" loading="lazy" decoding="async">
+      </a>
+      <a class="orb__item orb--er1" href="assets/img/prova-05-1200.webp" target="_blank" rel="noopener" aria-label="Ampliar registro 05">
+        <img src="assets/img/prova-05-480.webp" alt="Registro 05 de feedback recebido" width="800" height="1000" loading="lazy" decoding="async">
+      </a>
+      <a class="orb__item orb--er2" href="assets/img/prova-06-1200.webp" target="_blank" rel="noopener" aria-label="Ampliar registro 06">
+        <img src="assets/img/prova-06-480.webp" alt="Registro 06 de feedback recebido" width="800" height="1000" loading="lazy" decoding="async">
+      </a>
+      <a class="orb__item orb--er3" href="assets/img/prova-07-1200.webp" target="_blank" rel="noopener" aria-label="Ampliar registro 07">
+        <img src="assets/img/prova-07-480.webp" alt="Registro 07 de feedback recebido" width="800" height="1000" loading="lazy" decoding="async">
+      </a>
+      <a class="orb__item orb--er4" href="assets/img/prova-08-1200.webp" target="_blank" rel="noopener" aria-label="Ampliar registro 08">
+        <img src="assets/img/prova-08-480.webp" alt="Registro 08 de feedback recebido" width="800" height="1000" loading="lazy" decoding="async">
+      </a>
+      <a class="orb__item orb--eb1" href="assets/img/prova-09-1200.webp" target="_blank" rel="noopener" aria-label="Ampliar registro 09">
+        <img src="assets/img/prova-09-480.webp" alt="Registro 09 de feedback recebido" width="800" height="1000" loading="lazy" decoding="async">
+      </a>
+      <a class="orb__item orb--eb2" href="assets/img/prova-10-1200.webp" target="_blank" rel="noopener" aria-label="Ampliar registro 10">
+        <img src="assets/img/prova-10-480.webp" alt="Registro 10 de feedback recebido" width="800" height="1000" loading="lazy" decoding="async">
+      </a>
+      <a class="orb__item orb--et1" href="assets/img/prova-11-1200.webp" target="_blank" rel="noopener" aria-label="Ampliar registro 11">
+        <img src="assets/img/prova-11-480.webp" alt="Registro 11 de feedback recebido" width="800" height="1000" loading="lazy" decoding="async">
+      </a>
+      <a class="orb__item orb--et2" href="assets/img/prova-12-1200.webp" target="_blank" rel="noopener" aria-label="Ampliar registro 12">
+        <img src="assets/img/prova-12-480.webp" alt="Registro 12 de feedback recebido" width="800" height="1000" loading="lazy" decoding="async">
+      </a>
+      <div class="orb__centro">
+        <p class="eyebrow reveal">03 — Registros</p>
+        <h2 class="sec__title" id="prova-title">Veja o que acontece quando você começa a criar anúncios <em>com método.</em></h2>
+        <p class="orb__intro reveal">Uma seleção de feedbacks e registros da trajetória do Bruno.</p>
+      </div>
+    </div>
+
+    <div class="provas__foot">
+      <p>Registros de experiências anteriores. Resultados variam conforme negócio, execução e investimento.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ SOBRE + MANIFESTO ═══════════════════════ -->
+<section class="sec" id="sobre" aria-labelledby="sobre-title">
+  <span class="sec__veil" data-layer-veil aria-hidden="true"></span>
+  <div class="wrap">
+    <div class="sobre__grid">
+      <figure class="sobre__foto par-box reveal" data-par-child="0.12">
+        <video class="v-loop" muted loop playsinline preload="none"
+               poster="assets/img/bruno-loop-poster.webp"
+               data-src="assets/video/bruno-loop.mp4"
+               data-src-sm="assets/video/bruno-loop-sm.mp4"
+               width="640" height="1138"
+               aria-label="Bruno Freitas"></video>
+        <figcaption>Experiência que vira método.</figcaption>
+      </figure>
+
+      <div class="sobre__copy">
+        <p class="eyebrow reveal">04 — Quem vai te ensinar</p>
+        <h2 class="sec__title" id="sobre-title">Conheça quem<br> <em>vai te ensinar.</em></h2>
+        <p class="sobre__lead reveal">Ao longo da minha trajetória, tive a oportunidade de trabalhar nos bastidores de grandes marcas, experts e negócios no Brasil e nos Estados Unidos.</p>
+        <p class="reveal">Já desenvolvi estratégias, anúncios e campanhas para nomes como G4 Educação, Atom, Carol Paiffer, Henrique Fogaça, Neymar Pai, Paulo Guedes, além de grandes empresas do mercado americano.</p>
+        <p class="reveal">E trabalhar com negócios tão diferentes me fez perceber uma coisa. Não importa se você vende um curso, um serviço, um produto físico ou uma consulta.</p>
+        <p class="reveal">Antes de vender qualquer coisa, você precisa conquistar alguns segundos da atenção de alguém. E isso ficou muito mais difícil.</p>
+        <a class="textlink reveal" href="#oferta">Ver acesso ao programa <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+      </div>
+    </div>
+
+    <div class="bastidores reveal-stagger">
+      <figure>
+        <img class="bast-topo" src="assets/img/palco-01-800.webp" srcset="assets/img/palco-01-480.webp 480w, assets/img/palco-01-800.webp 800w" sizes="(max-width:800px) 100vw, 32vw" alt="Bruno Freitas no palco" width="800" height="500" loading="lazy" decoding="async">
+        <figcaption>Nos bastidores</figcaption>
+      </figure>
+      <figure>
+        <video class="bast-video v-loop" muted loop playsinline preload="none"
+               poster="assets/img/hero-poster.jpg"
+               data-src="assets/video/hero-loop-sm.mp4"
+               aria-label="Bruno Freitas durante uma palestra"></video>
+        <figcaption>Na prática</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/img/workshop-01-800.webp" srcset="assets/img/workshop-01-480.webp 480w, assets/img/workshop-01-800.webp 800w" sizes="(max-width:800px) 100vw, 32vw" alt="Workshop conduzido por Bruno Freitas" width="800" height="500" loading="lazy" decoding="async">
+        <figcaption>Compartilhando conhecimento</figcaption>
+      </figure>
+    </div>
+
+    <div class="manifesto">
+      <h2 class="manifesto__big">A era da guerra<br> <em>pela atenção.</em></h2>
+      <div class="manifesto__cols">
+        <p>Todos os dias, seu cliente abre o Instagram, YouTube ou qualquer outra plataforma e é bombardeado por milhares de mensagens, vídeos, ofertas e anúncios.</p>
+        <p>Seu concorrente não é mais apenas a empresa do outro lado da rua. Você está competindo com absolutamente tudo que aparece na tela do seu cliente.</p>
+        <p>Nós entramos em uma nova era. A era da guerra pela atenção. E nessa guerra, não necessariamente vence quem tem o melhor produto.</p>
+        <p>Vence quem consegue chamar atenção, comunicar melhor sua ideia e fazer as pessoas pararem tempo suficiente para ouvir o que tem a dizer.</p>
+        <p>Foi justamente por isso que eu criei o Programa Anúncios Lucrativos. Eu quis pegar tudo o que aprendi analisando, criando, testando e pensando anúncios ao longo desses anos e transformar em algo que qualquer pessoa ou negócio pudesse consultar e aplicar.</p>
+        <p>Não para formar mais um especialista em marketing. Mas para ajudar você a responder uma pergunta extremamente prática:</p>
+      </div>
+      <div class="fecho reveal">
+        <p class="fecho__q">“Como eu crio anúncios que chamam atenção e geram lucro para o meu negócio?”</p>
+        <div class="fecho__lado">
+          <p>Porque eu acredito que, nos próximos anos, saber conquistar atenção não será apenas uma habilidade de marketing. Será uma das maiores vantagens competitivas que um negócio pode ter.</p>
+          <a class="btn" href="#oferta" data-cta>Garantir minha vaga</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ OFERTA + GARANTIA ══════════════════════ -->
+<section class="sec sec--shell sec--layer" id="oferta" data-layer aria-labelledby="oferta-title">
+  <span class="sec__veil" data-layer-veil aria-hidden="true"></span>
+  <div class="wrap oferta__grid">
+    <div class="oferta__copy">
+      <p class="eyebrow reveal">A oferta</p>
+      <h2 class="oferta__title" id="oferta-title">Garanta sua vaga hoje<br> com uma <em>condição especial de lançamento.</em></h2>
+      <p class="oferta__sub reveal">Todo o conteúdo, todos os bônus. Um ponto de partida para criar melhor.</p>
+
+      <ul class="itens reveal-stagger">
+        <li>+100 Hooks Vencedores</li>
+        <li>57 Ângulos Validados</li>
+        <li>+25 Formatos Campeões</li>
+        <li>Matriz Estratégica dos Anúncios Lucrativos</li>
+        <li>Aula: A Anatomia de um Anúncio Lucrativo</li>
+        <li>Aula: Como Multiplicar um Anúncio Vencedor</li>
+        <li>Aula: O Segredo para Encontrar Boas Ideias</li>
+      </ul>
+
+    </div>
+
+    <div class="oferta__card reveal">
+      <div class="oferta__cardtop">
+        <span class="eyebrow">Acesso ao programa</span>
+        <span class="oferta__mark" aria-hidden="true"><svg class="ico ico--lg" aria-hidden="true"><use href="#i-ne"/></svg></span>
+      </div>
+      <h3>Anúncios <em>Lucrativos.</em></h3>
+      <p>Todo o conteúdo. Todos os bônus.</p>
+
+      <div class="preco" data-preco hidden></div>
+      <p class="escassez" data-escassez hidden></p>
+
+      <a class="btn btn--block" href="#" data-cta>Garantir minha vaga</a>
+      <p class="oferta__nota" data-cta-note>Acesso imediato · Garantia de 7 dias</p>
+
+      <div class="oferta__bonus">
+        <p class="itens__titulo">+ Bônus exclusivos</p>
+        <ul class="itens">
+          <li>Monitorias Mensais ao Vivo</li>
+          <li>(Biblioteca) Swipe File de Anúncios Vencedores</li>
+          <li>Kit de Prompts para Criar Anúncios com IA</li>
+        </ul>
+      </div>
+
+      <p class="oferta__cardfoot"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg> Garantia incondicional de 7 dias</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ GARANTIA ═══════════════════════════ -->
+<section class="sec garantia" id="garantia" aria-labelledby="garantia-title">
+  <div class="wrap garantia__grid">
+    <div class="garantia__selo reveal" data-par="0.1" aria-hidden="true">
+      <svg class="garantia__anel" viewBox="0 0 200 200">
+        <defs><path id="anel" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"></path></defs>
+        <text><textPath href="#anel" startOffset="0%">Garantia incondicional · 7 dias · Reembolso integral · Garantia incondicional · 7 dias · Reembolso integral · </textPath></text>
+      </svg>
+      <span class="garantia__miolo">
+        <span class="garantia__num">7</span>
+        <span class="garantia__dias">dias</span>
+      </span>
+    </div>
+
+    <div class="garantia__texto">
+      <p class="eyebrow reveal">A garantia</p>
+      <h2 class="garantia__title" id="garantia-title">Teste o Programa por 7 dias.<br> <em>O risco é meu.</em></h2>
+      <p class="reveal">Acesse as aulas, explore as bibliotecas, conheça a Matriz Estratégica e veja como o Programa pode entrar na sua rotina de criação de anúncios.</p>
+      <p class="reveal">Se dentro de 7 dias você entender que não faz sentido para você, basta solicitar o reembolso e receber 100% do seu investimento de volta.</p>
+      <p class="reveal">E, se decidir ficar, você mantém acesso a todos os bônus e às monitorias mensais, onde uma única dúvida destravada pode evitar meses de tentativa e erro no seu negócio.</p>
+    </div>
+
+    <ul class="garantia__selos reveal-stagger">
+      <li>Reembolso integral</li>
+      <li>Sem justificativa</li>
+      <li>Bônus liberados desde o dia 1</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FAQ ════════════════════════════════ -->
+<section class="sec sec--white" id="faq" aria-labelledby="faq-title">
+  <div class="wrap faq__grid">
+    <div class="faq__intro">
+      <p class="eyebrow reveal">Tudo às claras</p>
+      <h2 class="sec__title" id="faq-title">Perguntas <em>frequentes.</em></h2>
+      <p class="reveal">Respostas para suas principais dúvidas sobre o Programa.</p>
+      <a class="textlink reveal" href="#oferta">Voltar à oferta <svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></a>
+    </div>
+
+    <div class="faq__list reveal-stagger">
+      <details class="qa">
+        <summary>Preciso aparecer nos anúncios?<span class="plus" aria-hidden="true"></span></summary>
+        <div class="qa__body"><p>Não. Existem dezenas de formas de construir um anúncio sem você precisar estar na frente da câmera: anúncios estáticos, demonstrações, gravação de tela, voice-over, UGC com creators, formatos de conteúdo e até recursos de Inteligência Artificial. O importante é encontrar o formato que melhor apresenta a sua ideia.</p></div>
+      </details>
+
+      <details class="qa">
+        <summary>Tenho pouca verba. Vou precisar gastar dinheiro até descobrir o que funciona?<span class="plus" aria-hidden="true"></span></summary>
+        <div class="qa__body"><p>Não existe uma fórmula que faça todo anúncio vencer, mas existe uma diferença enorme entre testar no escuro e testar com direção. O Programa foi criado para ajudar você a decidir melhor o que vale a pena criar e testar, para que cada anúncio tenha uma lógica por trás e não seja apenas mais uma aposta.</p></div>
+      </details>
+
+      <details class="qa">
+        <summary>E se eu continuar sem saber qual anúncio criar?<span class="plus" aria-hidden="true"></span></summary>
+        <div class="qa__body"><p>É exatamente para resolver isso que o Programa existe. Em vez de começar cada anúncio do zero, você terá Hooks, Ângulos, Formatos, referências e a Matriz Estratégica para consultar sempre que precisar encontrar sua próxima ideia.</p></div>
+      </details>
+
+      <details class="qa">
+        <summary>E quando eu finalmente encontrar um anúncio vencedor, como faço para não começar tudo do zero de novo?<span class="plus" aria-hidden="true"></span></summary>
+        <div class="qa__body"><p>Você vai aprender justamente como identificar o que tornou aquele anúncio forte e transformar a mesma ideia em novas variações, explorando outros hooks, ângulos e formatos sem simplesmente copiar o criativo original.</p></div>
+      </details>
+
+      <details class="qa">
+        <summary>Qual a diferença entre Hook, Ângulo e Formato?<span class="plus" aria-hidden="true"></span></summary>
+        <div class="qa__body"><p>De forma simples: o Hook é a arte de chamar atenção e atrair a pessoa certa, o Ângulo define a perspectiva pela qual você apresenta a sua ideia, e o Formato é a maneira como essa ideia ganha vida no anúncio. No Programa, você aprende a combinar os três.</p></div>
+      </details>
+
+      <details class="qa">
+        <summary>Como funcionam as monitorias mensais?<span class="plus" aria-hidden="true"></span></summary>
+        <div class="qa__body"><p>As monitorias são encontros para você tirar dúvidas, analisar anúncios e acompanhar novos aprendizados e estratégias diretamente comigo. É a oportunidade de trazer situações reais do seu negócio para discussão.</p></div>
+      </details>
+
+      <details class="qa">
+        <summary>Eu preciso saber copywriting para fazer parte?<span class="plus" aria-hidden="true"></span></summary>
+        <div class="qa__body"><p>Não. Você não precisa dominar copywriting antes de entrar. As aulas foram criadas para explicar de forma prática o raciocínio que existe por trás de um bom anúncio, sem complicar com teoria desnecessária.</p></div>
+      </details>
+
+      <details class="qa">
+        <summary>Eu preciso ter uma equipe?<span class="plus" aria-hidden="true"></span></summary>
+        <div class="qa__body"><p>Não. O sistema funciona tanto para quem cria os próprios anúncios quanto para quem possui uma equipe. Inclusive, ele pode ajudar a dar mais direção para copywriters, designers, editores e gestores de tráfego.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <a class="brand" href="#topo" aria-label="Anúncios Lucrativos — início">
+        <span class="brand__mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>Anúncios<span>Lucrativos</span></span>
+      </a>
+      <p>Siga um sistema baseado no que já vendeu.</p>
+      <a class="btn" href="#oferta" data-cta>Garantir minha vaga</a>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span data-ano>2026</span> Bruno Freitas. Todos os direitos reservados.</span>
+      <span>Programa Anúncios Lucrativos</span>
+    </div>
+  </div>
+</footer>
+
+<div class="sticky" data-sticky hidden>
+  <span class="sticky__price" data-sticky-price>Anúncios Lucrativos<small>Garantia de 7 dias</small></span>
+  <a class="btn btn--small" href="#oferta" data-cta>Garantir minha vaga</a>
+</div>
+
+<!-- assume quando o cabeçalho sai de cena -->
+<a class="fab" href="#oferta" data-fab aria-label="Ir para a oferta">
+  <span>
+    Garantir minha vaga
+    <span class="fab__price" data-fab-price></span>
+  </span>
+  <span class="fab__disc" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></span>
+</a>
+
+</body>
+</html>

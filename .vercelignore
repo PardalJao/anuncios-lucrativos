@@ -1,0 +1,29 @@
+# masters dos vídeos, guardados para reencodar — não vão para o ar
+assets/video/_orig/
+
+# variantes de imagem que a V3 não referencia.
+# bruno-retrato-* e bruno-hero-* saíram quando o retrato do hero e a foto
+# do sobre viraram vídeo; palco-04 saiu quando "Na prática" virou vídeo.
+assets/img/bast-*
+assets/img/bastidor-*
+assets/img/bruno-hero-*
+assets/img/bruno-retrato-*
+assets/img/notif-*
+assets/img/palco-02-*
+assets/img/palco-03-*
+assets/img/palco-04-*
+assets/img/palco-05-*
+assets/img/palco-06-*
+assets/img/palco-07-*
+assets/img/palco-08-*
+assets/img/palco-09-*
+assets/img/palco-10-*
+assets/img/premio-*
+assets/img/workshop-02-*
+
+README.md
+.claude/
+
+# Vercel
+.vercel/
+.env.local
