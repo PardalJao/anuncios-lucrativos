@@ -513,7 +513,7 @@ html:not(.js) .hero__title{opacity:1}
 .trust > p{flex:0 0 190px;font-size:11px;line-height:1.7;color:var(--muted);margin:0}
 .trust__viewport{flex:1;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
 .trust__track{display:flex;align-items:center;gap:44px;width:max-content;will-change:transform}
-.trust__track li{display:inline-flex;align-items:center;gap:11px;
+.trust__track li{display:inline-flex;align-items:center;gap:8px;
   font:500 18px/1 var(--sans);letter-spacing:-.035em;color:#5f5a50;
   white-space:nowrap;transition:color .3s ease}
 /* rosto ou logo antes do nome: o círculo dá o mesmo tratamento a
@@ -1098,7 +1098,9 @@ main{background:var(--paper)}
 @media(max-width:860px){
   .showcase{grid-template-columns:1fr}
   .author{aspect-ratio:.72}
-  .trust{flex-direction:column;align-items:flex-start;gap:16px}
+  /* empilhado, a frase alinhada à esquerda com a faixa embaixo
+     deixava dois eixos concorrentes na mesma dobra */
+  .trust{flex-direction:column;align-items:center;gap:16px;text-align:center}
   .trust > p{flex-basis:auto}
   .trust__viewport{width:100%}
 }
