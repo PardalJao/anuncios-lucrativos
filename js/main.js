@@ -378,12 +378,26 @@ function initNav() {
     .map((it) => ({ it, el: document.querySelector(it.getAttribute('href')) }))
     .filter((o) => o.el);
 
+  // Para onde o indicador aponta agora — o item sob o cursor ou, sem
+  // cursor, o ativo. É por ele que o observador sabe quem seguir.
+  let alvo = null;
   const moveTo = (item) => {
+    alvo = item;
     if (!item) { ind.style.opacity = '0'; return; }
     ind.style.opacity = '1';
     ind.style.left = item.offsetLeft + 'px';
     ind.style.width = item.offsetWidth + 'px';
   };
+
+  // O losango do item ativo abre em 0,4s e alarga o item em 12px. Medir
+  // dois quadros depois pegava o meio do caminho: o indicador ficava
+  // 5px mais estreito que o item e o conteúdo saía do centro dele.
+  // O observador acompanha o item enquanto ele muda de tamanho, então
+  // o indicador chega junto em vez de chegar antes.
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(() => { if (alvo) moveTo(alvo); });
+    items.forEach((i) => ro.observe(i));
+  }
 
   let ativo = null;
   const setAtivo = (item) => {
