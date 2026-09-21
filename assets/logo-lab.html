@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Logo Lab v3</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f7f4ee;color:#171410}
+  header{padding:26px 32px 6px}h1{font:600 20px/1 sans-serif;margin:0 0 4px}p.sub{margin:0;opacity:.6}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;padding:22px 32px 60px}
+  .card{border:1px solid #e2dbcb;border-radius:16px;overflow:hidden;background:#fffdf9}
+  .row{display:flex}.pane{flex:1;display:flex;align-items:center;justify-content:center;padding:26px 12px}
+  .dark{background:#171410}
+  .label{padding:10px 14px;border-top:1px solid #e2dbcb;font-size:12px;letter-spacing:.05em;text-transform:uppercase;opacity:.7}
+  .sizes{display:flex;align-items:center;gap:16px;padding:12px 14px;border-top:1px solid #f1ece1;background:#faf7f1}
+  svg{display:block}
+</style></head>
+<body>
+<header><h1>Logo Lab v3 — finalistas refinados</h1><p class="sub">A = traço 11, junções arredondadas, mesma cor/peso do $ de referência.</p></header>
+<div class="grid" id="grid"></div>
+<script>
+const S = (c,w=12)=>`
+  <path d="M50 10 V22"/><path d="M50 78 V90"/>
+  <path d="M69 31 C69 21 31 21 31 38 C31 52 69 50 69 64 C69 80 31 80 31 70"/>`;
+
+const C={};
+
+// A · Lockup horizontal: $ + AL
+C.lockA=(c)=>({vb:'0 0 196 100',b:`<g fill="none" stroke="${c}" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M32 12 V23"/><path d="M32 77 V88"/>
+ <path d="M49 32 C49 23 15 23 15 39 C15 52 49 50 49 63 C49 79 15 79 15 69"/>
+ <path d="M84 76 L104 28 L124 76"/><path d="M92 60 H116"/>
+ <path d="M144 28 V76 H178"/></g>`});
+
+// B · Lockup com ligadura: perna direita do A = haste do L
+C.lockB=(c)=>({vb:'0 0 186 100',b:`<g fill="none" stroke="${c}" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M32 12 V23"/><path d="M32 77 V88"/>
+ <path d="M49 32 C49 23 15 23 15 39 C15 52 49 50 49 63 C49 79 15 79 15 69"/>
+ <path d="M84 76 L108 28 L132 76"/><path d="M93 58 H123"/>
+ <path d="M132 28 V76 H168"/></g>`});
+
+// C · Badge $ + AL embaixo (stack)
+C.stack=(c,bg)=>({vb:'0 0 100 138',b:`
+ <rect x="8" y="0" width="84" height="84" rx="24" fill="${c}"/>
+ <g fill="none" stroke="${bg}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M50 12 V21"/><path d="M50 63 V72"/>
+  <path d="M65 29 C65 22 35 22 35 34 C35 44 65 43 65 53 C65 65 35 65 35 58"/></g>
+ <g fill="none" stroke="${c}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M14 130 L30 100 L46 130"/><path d="M20 118 H40"/>
+  <path d="M62 100 V130 H88"/></g>`});
+
+// D · Monograma AL com haste-cifrão (nubs curtos e grossos)
+C.alStem=(c)=>({vb:'0 0 108 100',b:`<g fill="none" stroke="${c}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M12 78 L34 24 L56 78"/><path d="M21 58 H47"/>
+ <path d="M72 12 V88"/>
+ <path d="M72 26 V76 H98"/></g>`});
+
+// E · Ligadura AL fechada: travessão do A vira o pé do L, haste-cifrão atravessa
+C.alLig=(c)=>({vb:'0 0 104 100',b:`<g fill="none" stroke="${c}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M12 76 L34 22 L56 76"/>
+ <path d="M76 10 V90"/>
+ <path d="M76 22 V76 H24"/></g>`});
+
+// F · Badge + AL vazado com haste-cifrão
+C.alBadge=(c,bg)=>({vb:'0 0 100 100',b:`<rect x="1" y="1" width="98" height="98" rx="27" fill="${c}"/>
+ <g fill="none" stroke="${bg}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M20 72 L38 28 L56 72"/><path d="M27 58 H49"/>
+  <path d="M70 12 V88"/><path d="M70 28 V72 H88"/></g>`});
+
+// G · $ com A e L nas laterais da haste (compacto, sem S)
+C.split=(c)=>({vb:'0 0 120 100',b:`<g fill="none" stroke="${c}" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M60 8 V92"/>
+ <path d="M16 74 L33 30 L50 74"/><path d="M23 60 H43"/>
+ <path d="M76 30 V74 H104"/></g>`});
+
+const defs=[
+ ['A · Lockup $ + A L (solto)',C.lockA],
+ ['B · Lockup $ + ligadura AL',C.lockB],
+ ['C · Badge $ com AL embaixo',C.stack],
+ ['D · Monograma AL, haste-cifrão no L',C.alStem],
+ ['E · Ligadura AL fechada + haste-cifrão',C.alLig],
+ ['F · Badge AL vazado, haste-cifrão',C.alBadge],
+ ['G · Haste-cifrão central, A | L',C.split],
+];
+const render=(fn,color,bg,h)=>{const{vb,b}=fn(color,bg);const[,,w,hh]=vb.split(' ').map(Number);
+ return `<svg height="${h}" width="${h*w/hh}" viewBox="${vb}" xmlns="http://www.w3.org/2000/svg">${b}</svg>`};
+document.getElementById('grid').innerHTML=defs.map(([label,fn])=>`
+ <div class="card">
+  <div class="row"><div class="pane">${render(fn,'#b08d57','#f7f4ee',84)}</div>
+  <div class="pane dark">${render(fn,'#cbb488','#171410',84)}</div></div>
+  <div class="sizes">${[40,28,18,14].map(s=>render(fn,'#171410','#faf7f1',s)).join('')}
+   <span style="margin-left:auto;opacity:.5;font-size:11px">40/28/18/14</span></div>
+  <div class="label">${label}</div></div>`).join('');
+</script></body></html>

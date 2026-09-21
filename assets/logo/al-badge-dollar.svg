@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 138" role="img" aria-label="Anúncios Lucrativos">
+  <rect x="8" y="0" width="84" height="84" rx="24" fill="#b08d57"/>
+  <g fill="none" stroke="#faf7f1" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M50 12 V21"/><path d="M50 63 V72"/>
+    <path d="M65 29 C65 22 35 22 35 34 C35 44 65 43 65 53 C65 65 35 65 35 58"/>
+  </g>
+  <g fill="none" stroke="#b08d57" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 130 L30 100 L46 130"/><path d="M20 118 H40"/>
+    <path d="M62 100 V130 H88"/>
+  </g>
+</svg>

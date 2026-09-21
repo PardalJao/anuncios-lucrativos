@@ -206,12 +206,48 @@ html.is-loading .preloader{
   background-image:linear-gradient(90deg,rgba(21,19,15,.045) 1px,transparent 1px);
   background-size:calc(100% / var(--cols)) 100%;
 }
-.preloader__mark{display:flex;align-items:flex-end;gap:3px;height:30px;transform:skew(-12deg)}
-.preloader__mark i{display:block;width:8px;border-radius:1px;background:rgba(21,19,15,.14);transition:background .45s var(--e-out)}
-.preloader__mark i:nth-child(1){height:10px}
-.preloader__mark i:nth-child(2){height:19px}
-.preloader__mark i:nth-child(3){height:30px}
-.preloader__mark i.is-on{background:var(--champagne)}
+/* As três barras eram marca e medidor ao mesmo tempo: acendiam a 30,
+   60 e 90%. O cifrão não se divide em três, então ele próprio se enche
+   de baixo para cima enquanto carrega; ao completar, o nome abre ao
+   lado e fecha o lockup — só então a página se revela.
+   As medidas saem do arquivo: no viewBox de 645x228 o cifrão ocupa
+   145 de largura e o nome começa em x=125,9, ou seja, o "A" encaixa
+   atrás dele. Os 17,7 de sobreposição viram margem negativa, senão a
+   logo montada fica mais larga do que é. */
+.preloader__mark{
+  --alt:clamp(64px,8vw,92px);
+  display:flex;align-items:center;height:var(--alt);
+  transition:height .7s var(--e-house);
+}
+/* Fechado o lockup, a marca recua de tamanho e a palavra que ciclava sai
+   de cena: sem ela no fluxo, a grade recentra e sobra só a logo. */
+.preloader.is-completo .preloader__mark{--alt:clamp(46px,5.6vw,66px)}
+.preloader__word{transition:opacity .38s ease,max-height .6s var(--e-house)}
+.preloader.is-completo .preloader__word{opacity:0;max-height:0}
+.preloader.is-completo .preloader__pct{opacity:0;transition:opacity .38s ease}
+.marca__cifrao{position:relative;height:100%;flex:0 0 auto;
+  width:calc(var(--alt) * 145 / 228)}
+.cifrao{position:absolute;inset:0;width:100%;height:100%;display:block}
+.cifrao--base path{fill:rgba(21,19,15,.13)}
+.cifrao--nivel{
+  clip-path:inset(calc(100% - var(--nivel,0%)) 0 0 0);
+  transition:clip-path .25s linear;
+}
+.cifrao--nivel path{fill:var(--champagne)}
+.marca__nome{
+  height:100%;width:0;opacity:0;overflow:hidden;flex:0 0 auto;
+  margin-left:calc(var(--alt) * -17.7 / 228);
+  transition:width .85s var(--e-house),opacity .55s ease .12s;
+}
+.marca__nome svg{display:block;height:100%;flex:0 0 auto;
+  width:calc(var(--alt) * 519.1 / 228)}
+.marca__nome path{fill:var(--ink)}
+.preloader.is-completo .marca__nome{
+  width:calc(var(--alt) * 519.1 / 228);opacity:1;
+}
+@media(prefers-reduced-motion:reduce){
+  .marca__nome{transition:none}
+}
 .preloader__word{
   position:relative;overflow:hidden;height:1.3em;
   font-family:var(--serif);font-size:clamp(30px,5vw,58px);line-height:1.3;
@@ -261,18 +297,13 @@ html.is-loading .preloader{
 /* a pílula é baixa: a marca precisa de folga lateral proporcional,
    senão encosta na borda arredondada */
 .header.is-detached .wrap{width:calc(100% - 108px)}
-.header.is-detached .brand{font-size:14px;gap:8px}
-.header.is-detached .brand__mark{width:22px;height:22px}
-.header.is-detached .brand__mark i{width:5px}
-.header.is-detached .brand__mark i:nth-child(1){height:9px}
-.header.is-detached .brand__mark i:nth-child(2){height:15px}
-.header.is-detached .brand__mark i:nth-child(3){height:22px}
+.header.is-detached .brand__logo{height:30px}
 .header.is-detached .nav__item{min-height:36px;padding:0 11px}
 .header.is-detached .nav__label{font-size:12px}
 .header.is-detached .nav__indicator{height:28px;margin-top:-14px}
 .header.is-detached .nav__cta{min-height:36px;padding:8px 15px;font-size:12px;gap:12px;border-radius:999px}
 .header.is-detached .nav__cta .btn__icon{font-size:16px}
-.brand,.brand__mark,.brand__mark i,.nav__item,.nav__label,.nav__cta{
+.brand,.brand__logo,.nav__item,.nav__label,.nav__cta{
   transition:all .5s var(--e-out);
 }
 
@@ -315,13 +346,10 @@ html.is-loading .preloader{
 }
 .fab:hover .fab__disc{transform:rotate(45deg)}
 @media(min-width:801px){.fab{display:flex}}
-.brand{display:inline-flex;align-items:center;gap:11px;text-decoration:none;font:500 17px/1.02 var(--sans);letter-spacing:-.05em;flex-shrink:0}
-.brand__mark{display:flex;align-items:flex-end;gap:3px;width:31px;height:31px;transform:skew(-12deg)}
-.brand__mark i{display:block;width:8px;border-radius:1px;background:var(--green)}
-.brand__mark i:nth-child(1){height:13px}
-.brand__mark i:nth-child(2){height:22px}
-.brand__mark i:nth-child(3){height:31px}
-.brand span span{display:block}
+/* O lockup traz marca e nome juntos, então a altura comanda: a largura
+   vem da proporção do arquivo (645x228) e não precisa ser declarada. */
+.brand{display:inline-flex;align-items:center;text-decoration:none;flex-shrink:0}
+.brand__logo{display:block;width:auto;height:38px}
 
 .nav__pill{position:relative;display:flex;align-items:center;gap:4px}
 .nav__indicator{
@@ -1177,8 +1205,8 @@ main{background:var(--paper)}
    pixels. Apertar os dois resolve sem tirar nenhum dos dois da tela. */
 @media(max-width:380px){
   .nav{gap:8px}
-  .brand{font-size:13px;gap:7px}
-  .brand__mark{width:20px;height:20px}
+  .brand__logo{height:30px}
+  .header.is-detached .brand__logo{height:26px}
   .nav__cta{font-size:10.5px;padding-inline:10px;gap:8px}
   .nav__cta .btn__icon{font-size:13px}
   /* O recuo de 108px da pílula é medida de desktop: num cabeçalho de

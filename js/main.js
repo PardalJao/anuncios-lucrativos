@@ -256,7 +256,7 @@ function initPreloader(onDone) {
   const pctEl = el.querySelector('[data-pre-pct]');
   const barEl = el.querySelector('[data-pre-bar]');
   const wordEl = el.querySelector('[data-pre-word]');
-  const marks = [...el.querySelectorAll('[data-pre-mark] i')];
+  const marca = el.querySelector('[data-pre-mark]');
 
   const START = performance.now();
   const MIN_MS = 1500;
@@ -301,9 +301,18 @@ function initPreloader(onDone) {
     const shown = Math.round(pct);
     pctEl.textContent = shown + '%';
     barEl.style.width = shown + '%';
-    marks.forEach((m, i) => m.classList.toggle('is-on', shown >= (i + 1) * 30));
+    // o cifrão enche na mesma medida do número, de baixo para cima
+    if (marca) marca.style.setProperty('--nivel', shown + '%');
 
-    if (pct >= 100) { finished = true; clearInterval(cycle); exit(); return; }
+    if (pct >= 100) {
+      finished = true;
+      clearInterval(cycle);
+      // o cifrão está cheio: o nome abre ao lado e fecha o lockup.
+      // A página só se revela depois que a logo terminou de se formar.
+      el.classList.add('is-completo');
+      setTimeout(exit, reduced ? 0 : 1400);
+      return;
+    }
     requestAnimationFrame(tick);
   };
 
@@ -311,8 +320,7 @@ function initPreloader(onDone) {
     document.documentElement.classList.remove('is-loading');
     if (typeof gsap === 'undefined') { el.remove(); onDone(); return; }
     gsap.timeline({ onComplete: () => { el.remove(); onDone(); } })
-      .to([wordEl, pctEl], { opacity: 0, duration: 0.3, ease: 'power2.in' })
-      .to(el, { yPercent: -100, duration: 0.9, ease: 'expo.inOut' }, 0.12);
+      .to(el, { yPercent: -100, duration: 0.9, ease: 'expo.inOut' });
   };
 
   requestAnimationFrame(tick);
