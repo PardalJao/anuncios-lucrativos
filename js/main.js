@@ -309,8 +309,24 @@ function initPreloader(onDone) {
       clearInterval(cycle);
       // o cifrão está cheio: o nome abre ao lado e fecha o lockup.
       // A página só se revela depois que a logo terminou de se formar.
+      // Quanto o conjunto precisa deslizar para que o lockup inteiro,
+      // e não só o cifrão, fique no centro. Medido agora porque depende
+      // da largura real do nome depois do clamp e das fontes; o recuo
+      // de escala entra na conta porque encolhe em torno do cifrão.
+      const REDUZ = 0.8;
+      const nome = el.querySelector('.marca__nome');
+      if (marca && nome) {
+        // Por offset, não por getBoundingClientRect: o nome parte com um
+        // translateX de entrada, e o rect já traria esse deslocamento
+        // embutido, jogando o centro alguns pixels para o lado.
+        const recuo = parseFloat(getComputedStyle(nome).marginLeft) || 0;
+        const cresce = nome.offsetWidth + recuo;   // o que o nome soma à direita
+        marca.style.setProperty('--reduz', REDUZ);
+        marca.style.setProperty('--desloca',
+          (-(cresce / 2) * REDUZ).toFixed(1) + 'px');
+      }
       el.classList.add('is-completo');
-      setTimeout(exit, reduced ? 0 : 1400);
+      setTimeout(exit, reduced ? 0 : 1500);
       return;
     }
     requestAnimationFrame(tick);
