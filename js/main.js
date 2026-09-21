@@ -835,6 +835,12 @@ function initOrbita() {
 function initMotion() {
   if (reduced || typeof gsap === 'undefined') return;
   gsap.registerPlugin(ScrollTrigger);
+  // No iPhone a barra de endereço do Safari encolhe e cresce durante a
+  // rolagem. Cada mudança dessas altera innerHeight, e sem isto o
+  // ScrollTrigger recalcula start e end no meio de um pin — foi o que
+  // jogava o trilho para além do último cartão e deixava um trecho vazio
+  // depois dele. Esta config manda ignorar resize que só mexe na altura.
+  ScrollTrigger.config({ ignoreMobileResize: true });
 
   const EASE = 'power3.out';
 
@@ -1027,25 +1033,31 @@ function initMotion() {
     if (!box || !track) return;
 
     box.classList.add('is-pinned');
-    const dist = () => {
+
+    // A medida sai de `onRefreshInit`, que a ScrollTrigger chama com os
+    // pins já desfeitos. Lendo `box.clientWidth` com o pin montado a
+    // conta dava outro número — aqui deu 1834 na criação e 1874 depois,
+    // 40px de diferença — e como o `end` usava um e o tween usava o
+    // outro, o trilho corria mais do que o curso e o último cartão
+    // saía pela esquerda, com rolagem vazia atrás.
+    let curso = 1;
+    const medir = () => {
       const cs = getComputedStyle(box);
       const visivel = box.clientWidth
         - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-      return Math.max(0, track.scrollWidth - visivel);
+      curso = Math.max(1, track.scrollWidth - visivel);
     };
-    // só o respiro de um toque: 30% da tela viravam um trecho de rolagem
-    // em que nada acontecia, com o trilho já no fim e a página presa
-    const SEGURA = () => window.innerHeight * 0.06;
+    medir();
 
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: box, start: 'top 8%',
-        end: () => '+=' + (dist() + SEGURA()),
+        end: () => '+=' + curso,
         pin: true, scrub: 0.8, anticipatePin: 1, invalidateOnRefresh: true,
+        onRefreshInit: medir,
       },
     });
-    tl.to(track, { x: () => -dist(), ease: 'none', duration: () => dist() || 1 })
-      .to({}, { duration: SEGURA });
+    tl.to(track, { x: () => -curso, ease: 'none' });
 
     return () => {
       box.classList.remove('is-pinned');
