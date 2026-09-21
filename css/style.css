@@ -1130,6 +1130,10 @@ main{background:var(--paper)}
     transition:opacity .32s var(--e-out),transform .32s var(--e-out),
                visibility 0s linear .32s;
   }
+  /* sem CTA ao lado, a marca ocupa o meio; volta ao canto quando ele
+     reaparece. O deslocamento vem de --marca-centro, medido no JS */
+  .brand{transition:transform .38s var(--e-out)}
+  .header.is-cta-redundante .brand{transform:translateX(var(--marca-centro,0px))}
 }
 
 /* Telefone estreito: marca e CTA lado a lado passam de 320px por poucos
@@ -1140,6 +1144,13 @@ main{background:var(--paper)}
   .brand__mark{width:20px;height:20px}
   .nav__cta{font-size:10.5px;padding-inline:10px;gap:8px}
   .nav__cta .btn__icon{font-size:13px}
+  /* O recuo de 108px da pílula é medida de desktop: num cabeçalho de
+     280px ele deixa a barra com 170px para 271px de conteúdo. */
+  .header.is-detached .wrap{width:calc(100% - 36px)}
+  /* e a regra do estado desgrudado é mais específica que a de cima,
+     então repunha corpo 12px e recuo 15px e desfazia o encolhimento */
+  .header.is-detached .nav__cta{font-size:10.5px;padding:8px 10px;gap:8px}
+  .header.is-detached .nav__cta .btn__icon{font-size:13px}
 }
 
 /* ═══════════════════════════════════════════════════════════════

@@ -452,6 +452,26 @@ function initHeaderScroll() {
     }, { threshold: 0 }).observe(ctaHero);
   }
 
+  // Sem CTA ao lado, a marca vai para o meio. O deslocamento é medido e
+  // não fixo: o CTA recolhido continua ocupando espaço, e a largura útil
+  // muda quando o cabeçalho desgruda do topo. Um ResizeObserver na barra
+  // cobre os dois casos mais a chegada das fontes, que reflui a marca.
+  // O transform não altera layout, então medir aqui não realimenta.
+  const marca = header.querySelector('.brand');
+  const barra = header.querySelector('.nav');
+  if (marca && barra) {
+    const medirCentroDaMarca = () => {
+      const cs = getComputedStyle(barra);
+      const util = barra.clientWidth
+        - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const d = Math.max(0, (util - marca.offsetWidth) / 2);
+      header.style.setProperty('--marca-centro', d.toFixed(1) + 'px');
+    };
+    medirCentroDaMarca();
+    new ResizeObserver(medirCentroDaMarca).observe(barra);
+    if (document.fonts) document.fonts.ready.then(medirCentroDaMarca);
+  }
+
   const TOPO = 6;        // tolerância para "está no topo"
   const SOLTA = 90;      // a partir daqui pode esconder
   const RUIDO = 6;       // ignora tremidas de trackpad
