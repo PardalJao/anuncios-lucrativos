@@ -199,7 +199,7 @@ summary::-webkit-details-marker{display:none}
 html.is-loading .preloader{
   --alt:clamp(64px,8vw,92px);
   display:grid;position:fixed;inset:0;z-index:200;
-  place-content:center;justify-items:center;gap:0;
+  place-content:center;justify-items:center;gap:14px;
   background:var(--paper);color:var(--ink);
 }
 .preloader::before{
@@ -250,16 +250,11 @@ html.is-loading .preloader{
    verdadeiro. O quanto deslizar é medido no JS, porque depende da
    largura real do nome depois das fontes e do clamp. */
 .preloader.is-completo .preloader__mark{
-  transform:translateX(var(--desloca,0px)) scale(var(--reduz,.8));
+  transform:translate(var(--desloca,0px),var(--desce,0px)) scale(var(--reduz,.8));
 }
 
 /* A palavra sai por opacidade, não por altura: recortar a caixa de
    texto cortava as letras no meio. Fora do fluxo, some sem mover nada. */
-.preloader__word{
-  position:absolute;left:0;right:0;top:50%;
-  margin-top:calc(var(--alt) / 2 + 26px);
-  transition:opacity .55s ease,transform .7s var(--e-house);
-}
 .preloader.is-completo .preloader__word{opacity:0;transform:translateY(12px)}
 .preloader.is-completo .preloader__pct{opacity:0;transition:opacity .5s ease}
 
@@ -270,6 +265,10 @@ html.is-loading .preloader{
   position:relative;overflow:hidden;height:1.3em;
   font-family:var(--serif);font-size:clamp(30px,5vw,58px);line-height:1.3;
   letter-spacing:-.035em;text-align:center;
+  /* a palavra continua no fluxo: é ela que faz o par marca+palavra ficar
+     centrado enquanto carrega. Some por opacidade, sem mexer no layout;
+     a marca então desce até o centro por transform. */
+  transition:opacity .55s ease,transform .7s var(--e-house);
 }
 .preloader__word span{display:block}
 .preloader__pct{

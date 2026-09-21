@@ -321,9 +321,15 @@ function initPreloader(onDone) {
         // embutido, jogando o centro alguns pixels para o lado.
         const recuo = parseFloat(getComputedStyle(nome).marginLeft) || 0;
         const cresce = nome.offsetWidth + recuo;   // o que o nome soma à direita
+        // Enquanto carrega, quem está centrado é o par marca+palavra, então
+        // a marca fica acima do meio por metade do bloco da palavra mais o
+        // vão. Sumindo a palavra, ela desce essa mesma medida.
+        const vao = parseFloat(getComputedStyle(el).rowGap) || 0;
+        const desceY = (vao + wordEl.offsetHeight) / 2;
         marca.style.setProperty('--reduz', REDUZ);
         marca.style.setProperty('--desloca',
           (-(cresce / 2) * REDUZ).toFixed(1) + 'px');
+        marca.style.setProperty('--desce', desceY.toFixed(1) + 'px');
       }
       el.classList.add('is-completo');
       setTimeout(exit, reduced ? 0 : 1500);
