@@ -730,8 +730,8 @@ function initOrbita() {
 
   const chave = (el) => ANEL.find((k) => el.classList.contains('orb--' + k));
 
-  // abaixo de 900px o CSS desmonta a órbita e vira grade: sem pin, sem viagem
-  gsap.matchMedia().add('(min-width: 901px)', () => {
+  // abaixo de 1025px o CSS desmonta a órbita e vira coluna: sem pin, sem viagem
+  gsap.matchMedia().add('(min-width: 1025px)', () => {
     const itens = gsap.utils.toArray('.orb__item', orb)
       .filter(chave)
       .sort((a, b) => ANEL.indexOf(chave(a)) - ANEL.indexOf(chave(b)));
@@ -814,7 +814,7 @@ function initOrbita() {
   // No telefone não há anel: a coluna corre e cada registro entra pelo
   // lado em que estaria na órbita, alternando. É a mesma ideia de
   // "vem de fora do quadro", contada no formato que a tela permite.
-  gsap.matchMedia().add('(max-width: 900px)', () => {
+  gsap.matchMedia().add('(max-width: 1024px)', () => {
     const itens = gsap.utils.toArray('.orb__item', orb)
       .filter((el) => getComputedStyle(el).display !== 'none');
     if (!itens.length) return;
@@ -876,7 +876,7 @@ function initMotion() {
   // ele começa assim que a borda de cima entra, e com mais tempo de
   // curso: a tela é menor, então o trecho em que dá para ver é curto.
   gsap.matchMedia().add(
-    { telefone: '(max-width: 900px)', amplo: '(min-width: 901px)' },
+    { telefone: '(max-width: 1024px)', amplo: '(min-width: 1025px)' },
     (ctx) => {
       const fone = !!ctx.conditions.telefone;
       const dur = fone ? 1.25 : 0.95;
@@ -925,8 +925,8 @@ function initMotion() {
 
   gsap.matchMedia().add(
     {
-      pinado: '(min-width: 980px) and (min-height: 760px)',
-      normal: '(max-width: 979px), (max-height: 759px)',
+      pinado: '(min-width: 1025px) and (min-height: 760px)',
+      normal: '(max-width: 1024px), (max-height: 759px)',
     },
     (ctx) => {
       const pilares = gsap.utils.toArray('.pilar');
@@ -967,7 +967,7 @@ function initMotion() {
   /* ── 10.5 Trilho horizontal dos entregáveis ────────────
      ease:"none" é obrigatório: com qualquer outra, a posição
      horizontal deixa de acompanhar o scroll 1:1.            */
-  gsap.matchMedia().add('(min-width: 980px)', () => {
+  gsap.matchMedia().add('(min-width: 1025px)', () => {
     const box = document.querySelector('[data-hscroll]');
     const track = document.querySelector('[data-htrack]');
     const sec = document.querySelector('.entregaveis');
@@ -1018,7 +1018,7 @@ function initMotion() {
      já passa de 500px — e o rodapé dele ficaria fora de vista o
      trilho todo. Então prende-se só a caixa do trilho: o título rola
      e sai normalmente, e o cartão inteiro fica em cena. */
-  gsap.matchMedia().add('(max-width: 979px)', () => {
+  gsap.matchMedia().add('(max-width: 1024px)', () => {
     const box = document.querySelector('[data-hscroll]');
     const track = document.querySelector('[data-htrack]');
     if (!box || !track) return;
