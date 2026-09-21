@@ -440,6 +440,18 @@ function initHeaderScroll() {
     }, { threshold: 0 }).observe(alvo);
   });
 
+  // No telefone o cabeçalho é só marca e CTA. Enquanto o botão da hero
+  // está em cena os dois pedem a mesma coisa lado a lado, então o do
+  // cabeçalho se recolhe — a partir da segunda dobra ele passa a ser a
+  // única compra à mão e volta. É a mesma regra do CTA do canto, que já
+  // se cala onde existe outro botão de compra visível.
+  const ctaHero = document.querySelector('.hero__cta');
+  if (ctaHero) {
+    new IntersectionObserver(([e]) => {
+      header.classList.toggle('is-cta-redundante', e.isIntersecting);
+    }, { threshold: 0 }).observe(ctaHero);
+  }
+
   const TOPO = 6;        // tolerância para "está no topo"
   const SOLTA = 90;      // a partir daqui pode esconder
   const RUIDO = 6;       // ignora tremidas de trackpad

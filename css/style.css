@@ -1116,10 +1116,20 @@ main{background:var(--paper)}
   /* os nomes da faixa ficavam do tamanho de um título */
   .trust__track li{font-size:15px}
   .trust__track{gap:30px}
-  /* o CTA volta ao topo: sem o hambúrguer sobra espaço ao lado da marca,
-     e ter a compra visível na primeira tela vale mais do que depender
-     só da barra fixa do rodapé */
-  .nav__cta{padding-inline:12px;font-size:11.5px}
+  /* o CTA volta ao topo: sem o hambúrguer sobra espaço ao lado da marca.
+     Mas ele se recolhe enquanto o botão da hero está em cena — dois
+     convites iguais na mesma tela não somam. Quem controla é o
+     observador em initHeaderScroll(). */
+  .nav__cta{
+    padding-inline:12px;font-size:11.5px;
+    transition:opacity .32s var(--e-out),transform .32s var(--e-out),
+               visibility 0s linear 0s;
+  }
+  .header.is-cta-redundante .nav__cta{
+    opacity:0;transform:scale(.9);pointer-events:none;visibility:hidden;
+    transition:opacity .32s var(--e-out),transform .32s var(--e-out),
+               visibility 0s linear .32s;
+  }
 }
 
 /* Telefone estreito: marca e CTA lado a lado passam de 320px por poucos
