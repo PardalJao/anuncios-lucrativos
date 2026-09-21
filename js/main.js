@@ -1295,8 +1295,10 @@ function initFechoParticulas() {
   // ainda se lê depois de virar pontos, onde as letras do nome viram borrão
   const FONTE = 'assets/logo/al-cifrao.svg';
   const RAZAO = 144 / 228;          // largura ÷ altura do arquivo
-  const OURO = '216,193,147';
-  const PAPEL = '196,184,163';
+  // tons escuros: o cartão voltou a ser claro, e os pontos pálidos que
+  // serviam ao preto sumiriam sobre o branco
+  const OURO = '176,141,87';
+  const PAPEL = '150,140,122';
 
   const MOLA = 0.046;               // o quanto a casa puxa
   const ATRITO = 0.88;
@@ -1358,7 +1360,7 @@ function initFechoParticulas() {
     const oy = estreito ? -lh * 0.1 : (alt - lh) / 2;
     // quase invisível de propósito: a marca é o material do fundo, não
     // um segundo desenho disputando com a citação
-    const alfa = estreito ? 0.11 : 0.15;
+    const alfa = estreito ? 0.1 : 0.13;
     const novos = [];
 
     for (let y = 0; y < fora.height; y += passo) {
@@ -1378,7 +1380,7 @@ function initFechoParticulas() {
       novos.push(criar(
         Math.random() * larg, Math.random() * alt,
         Math.random() < 0.4 ? OURO : PAPEL,
-        0.03 + Math.random() * 0.055,
+        0.025 + Math.random() * 0.045,
         1 + Math.random() * 0.6,
         7 + Math.random() * 9
       ));
@@ -1454,15 +1456,15 @@ function initFechoParticulas() {
       ctx.fillRect(p.x, p.y, p.tam, p.tam);
     }
 
-    // segundo passe só no que o cursor tocou: acende sem virar lanterna
-    ctx.globalCompositeOperation = 'lighter';
+    // segundo passe só no que o cursor tocou: sobre claro, acender é
+    // adensar o ponto, não clarear — 'lighter' o empurraria para o
+    // branco do cartão e ele sumiria justo onde o cursor está
     for (let i = 0; i < pontos.length; i++) {
       const p = pontos[i];
       if (p.perto < 0.05) continue;
-      ctx.fillStyle = 'rgba(' + p.cor + ',' + (p.perto * 0.22).toFixed(3) + ')';
+      ctx.fillStyle = 'rgba(' + p.cor + ',' + (p.perto * 0.2).toFixed(3) + ')';
       ctx.fillRect(p.x - 0.4, p.y - 0.4, p.tam + 0.8, p.tam + 0.8);
     }
-    ctx.globalCompositeOperation = 'source-over';
 
     if (visivel && !calmo.matches) pedir();
   }

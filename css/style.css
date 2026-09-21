@@ -306,15 +306,15 @@ html.is-loading .preloader{
   position:relative;position:fixed;right:26px;bottom:26px;z-index:55;
   display:none;align-items:center;gap:18px;
   padding:16px 18px 16px 28px;border-radius:999px;
-  background:linear-gradient(145deg,var(--cta),#0d5a2b 58%);
+  background:linear-gradient(145deg,#1b1916,#000 58%);
   color:var(--white);text-decoration:none;overflow:hidden;isolation:isolate;
-  box-shadow:0 16px 38px rgba(13,90,43,.34),inset 0 1px 0 rgba(255,255,255,.14);
+  box-shadow:0 16px 38px rgba(17,17,17,.34),inset 0 1px 0 rgba(255,255,255,.14);
   font:500 14px/1.3 var(--sans);white-space:nowrap;
   opacity:0;transform:translateY(16px) scale(.94);pointer-events:none;
   transition:opacity .38s var(--e-out),transform .38s var(--e-out),box-shadow .3s ease;
 }
 .fab.is-on{opacity:1;transform:none;pointer-events:auto}
-.fab:hover{box-shadow:0 20px 46px rgba(13,90,43,.44),inset 0 1px 0 rgba(255,255,255,.2)}
+.fab:hover{box-shadow:0 20px 46px rgba(17,17,17,.44),inset 0 1px 0 rgba(255,255,255,.2)}
 /* reflexo varrendo — só enquanto o botão está em cena */
 .fab::before{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
@@ -1125,25 +1125,21 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .fecho{
   display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(34px,4vw,64px);align-items:center;
   margin-top:clamp(40px,4.6vw,64px);padding:clamp(34px,4.4vw,64px);
-  color:#f6f1e6;
-  /* contorno quente em vez de neutro: o fio branco recortava o cartão
-     do fundo claro, e um tom da própria luz costura os dois */
-  border:1px solid rgba(176,141,87,.22);border-radius:var(--radius);
-  box-shadow:0 24px 54px rgba(17,17,17,.24),
-             inset 0 1px 0 rgba(246,241,230,.07);
+  background-color:var(--white);
+  border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:0 16px 38px rgba(17,17,17,.06);
   position:relative;overflow:hidden;isolation:isolate;
-  /* o grão mora no próprio cartão, embaixo das luzes: assim ele é a
-     textura do material e não um véu por cima dela. Duas malhas de
-     tamanhos diferentes — uma só, repetida, deixa ver o ladrilho. */
-  background-color:var(--deep);
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.065'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.32' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)' opacity='0.045'/%3E%3C/svg%3E");
-  background-size:140px 140px,320px 320px;
-  background-blend-mode:screen,screen;
+  /* o grão continua sendo a textura do material, mas sobre claro quem
+     escurece é multiply — screen, que servia ao cartão preto, aqui
+     não faria nada */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  background-size:140px 140px;
+  background-blend-mode:multiply;
 }
 /* Duas camadas de luz girando em sentidos opostos e em tempos que não
    são múltiplos: o encontro delas nunca se repete, e é isso que tira
-   o aspecto de mancha desenhada. Cada luz sozinha é fraca demais para
-   ter borda; o que aparece é a soma. */
+   o aspecto de mancha desenhada. Sobre o branco elas viram um calor
+   de fundo, não um brilho. */
 .fecho::before,
 .fecho::after{
   content:"";position:absolute;inset:-55%;z-index:-1;pointer-events:none;
@@ -1151,18 +1147,14 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 }
 .fecho::before{
   background:
-    radial-gradient(circle at 18% 22%, rgba(176,141,87,.15) 0%, rgba(176,141,87,0) 46%),
-    radial-gradient(circle at 47% 12%, rgba(216,193,147,.09) 0%, rgba(216,193,147,0) 42%),
-    radial-gradient(circle at 78% 26%, rgba(125,101,52,.15) 0%, rgba(125,101,52,0) 48%),
-    radial-gradient(circle at 30% 56%, rgba(216,193,147,.08) 0%, rgba(216,193,147,0) 44%);
+    radial-gradient(circle at 18% 22%, rgba(176,141,87,.13) 0%, rgba(176,141,87,0) 46%),
+    radial-gradient(circle at 78% 26%, rgba(125,101,52,.10) 0%, rgba(125,101,52,0) 48%);
   animation:fechoDeriva 52s linear infinite;
 }
 .fecho::after{
   background:
-    radial-gradient(circle at 63% 50%, rgba(176,141,87,.12) 0%, rgba(176,141,87,0) 46%),
-    radial-gradient(circle at 86% 70%, rgba(246,241,230,.07) 0%, rgba(246,241,230,0) 40%),
-    radial-gradient(circle at 14% 82%, rgba(125,101,52,.13) 0%, rgba(125,101,52,0) 46%),
-    radial-gradient(circle at 52% 88%, rgba(176,141,87,.10) 0%, rgba(176,141,87,0) 44%);
+    radial-gradient(circle at 63% 50%, rgba(176,141,87,.10) 0%, rgba(176,141,87,0) 46%),
+    radial-gradient(circle at 14% 82%, rgba(125,101,52,.09) 0%, rgba(125,101,52,0) 46%);
   animation:fechoDeriva 71s linear infinite reverse;
 }
 @media(prefers-reduced-motion:reduce){
@@ -1182,13 +1174,10 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 }
 .fecho__q{
   font-family:var(--serif);font-size:clamp(24px,3.1vw,40px);
-  line-height:1.08;letter-spacing:-.05em;color:#f6f1e6;
+  line-height:1.08;letter-spacing:-.05em;
 }
-.fecho__lado p{color:#c2b9a8;font-size:15px;line-height:1.8}
-/* o CTA tem uma cor só no site inteiro; sobre o preto o verde separa
-   em 3,76:1, acima do 3:1 que um componente precisa */
+.fecho__lado p{color:var(--muted);font-size:15px;line-height:1.8}
 .fecho__lado .btn{margin-top:24px}
-.fecho__lado .btn:hover{box-shadow:0 10px 26px rgba(21,128,61,.34)}
 @media(max-width:1024px){.fecho{grid-template-columns:1fr;gap:24px}}
 @media(max-width:1024px){
   .sobre__grid{grid-template-columns:1fr;gap:34px}
