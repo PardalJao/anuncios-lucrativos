@@ -590,31 +590,95 @@ function initLayers() {
    ─────────────────────────────────────────────────────────── */
 function initOrbita() {
   const orb = document.querySelector('[data-orb]');
-  if (!orb) return;
+  const sec = document.querySelector('.orbita');
+  if (!orb || !sec) return;
 
-  const itens = gsap.utils.toArray('.orb__item', orb);
-  if (!itens.length) return;
+  // Ordem do anel no sentido horário, começando no topo à esquerda.
+  // É por ela que cada peça sabe para onde viajar na virada.
+  const ANEL = ['et1', 'et2', 'er1', 'er2', 'er3', 'er4',
+                'eb2', 'eb1', 'el4', 'el3', 'el2', 'el1'];
 
-  // abaixo de 900px o CSS desmonta a órbita e vira grade
+  const chave = (el) => ANEL.find((k) => el.classList.contains('orb--' + k));
+
+  // abaixo de 900px o CSS desmonta a órbita e vira grade: sem pin, sem viagem
   gsap.matchMedia().add('(min-width: 901px)', () => {
+    const itens = gsap.utils.toArray('.orb__item', orb)
+      .filter(chave)
+      .sort((a, b) => ANEL.indexOf(chave(a)) - ANEL.indexOf(chave(b)));
+    if (itens.length < 2) return;
+
+    // A rotação de repouso mora no CSS de cada posição. O GSAP assume o
+    // transform inteiro, então lê esse ângulo uma vez e passa a somá-lo.
+    const base = itens.map((el) => {
+      const m = getComputedStyle(el).transform;
+      if (!m || m === 'none') return 0;
+      const [a, b] = m.replace(/matrix\(|\)/g, '').split(',').map(parseFloat);
+      return Math.atan2(b, a) * 180 / Math.PI;
+    });
+
+    // Mede os centros em repouso para descobrir o vetor até a peça seguinte.
+    // Medir (em vez de chutar px) mantém o giro correto em qualquer largura.
+    let plano = [];
+    const medir = () => {
+      gsap.set(itens, { clearProps: 'transform' });
+      const centro = itens.map((el) => {
+        const r = el.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+      });
+      plano = itens.map((el, i) => {
+        const prox = centro[(i + 1) % itens.length];
+        const meio = orb.getBoundingClientRect();
+        const eu = centro[i];
+        // entrada: vem de fora, na direção da borda mais próxima
+        const fora = 1.35;
+        return {
+          dx: prox.x - eu.x,
+          dy: prox.y - eu.y,
+          fx: (eu.x - (meio.left + meio.width / 2)) * fora,
+          fy: (eu.y - (meio.top + meio.height / 2)) * (fora * 0.55),
+          giro: (i % 2 ? 1 : -1) * gsap.utils.random(6, 11, 0.5),
+        };
+      });
+      itens.forEach((el, i) => gsap.set(el, { rotation: base[i] }));
+    };
+    medir();
+
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: orb, start: 'top 78%', end: 'bottom 62%', scrub: 0.8,
+        trigger: sec,
+        start: 'top top',
+        end: () => '+=' + window.innerHeight * 2.2,
+        pin: true,
+        scrub: 0.6,
+        invalidateOnRefresh: true,
+        onRefreshInit: medir,
       },
     });
 
-    itens.forEach((el) => {
-      const r = el.getBoundingClientRect();
-      const meio = orb.getBoundingClientRect();
-      // empurra na direção da borda mais próxima
-      const dx = (r.left + r.width / 2) < (meio.left + meio.width / 2) ? -70 : 70;
-      const dy = (r.top + r.height / 2) < (meio.top + meio.height / 2) ? -40 : 40;
-      tl.from(el, {
-        opacity: 0, x: dx, y: dy, scale: 0.8, duration: 0.5, ease: 'power2.out',
-      }, gsap.utils.random(0, 0.5, 0.05));
+    // 1. ENTRADA (0 → .42): sai de fora do miolo e pousa no layout do CSS
+    itens.forEach((el, i) => {
+      tl.fromTo(el,
+        { x: () => plano[i].fx, y: () => plano[i].fy, scale: 0.82, opacity: 0 },
+        { x: 0, y: 0, scale: 1, opacity: 1, ease: 'power2.out', duration: 0.42 },
+        i * 0.012);
     });
 
-    return () => gsap.set(itens, { clearProps: 'opacity,x,y,scale' });
+    // 2. REPOUSO (.42 → .52): o layout fica parado o suficiente para ser lido
+    tl.to({}, { duration: 0.1 });
+
+    // 3. VIRADA (.52 → 1): cada peça ocupa o lugar da seguinte e o anel gira
+    //    um passo. O ângulo extra dá a sensação de peça solta, não de grade.
+    itens.forEach((el, i) => {
+      tl.to(el, {
+        x: () => plano[i].dx,
+        y: () => plano[i].dy,
+        rotation: base[i] + plano[i].giro,
+        ease: 'power2.inOut',
+        duration: 0.48,
+      }, 0.52 + i * 0.008);
+    });
+
+    return () => gsap.set(itens, { clearProps: 'transform,opacity' });
   });
 }
 
@@ -782,8 +846,10 @@ function initMotion() {
   });
 
   initParallax();
-  initLayers();
+  // a órbita cria o próprio pin; initLayers precisa vê-lo para não
+  // empilhar yPercent numa seção pinada
   initOrbita();
+  initLayers();
   initWordReveal();
 
   // fontes mudam a altura dos blocos e movem todos os gatilhos

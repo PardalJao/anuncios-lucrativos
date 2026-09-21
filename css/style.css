@@ -746,7 +746,12 @@ html:not(.js) .hero__title{opacity:1}
 /* Órbita: o texto fica no centro e os registros se revelam em volta dele
    conforme o scroll avança. Cada peça tem posição e deslocamento próprios;
    o JS só anima a entrada, a posição é toda do CSS. */
-.orb{position:relative;min-height:min(86vh,800px);display:grid;place-items:center}
+/* pinada: a dobra inteira tem de caber em 100vh, senão o topo some */
+.orb{position:relative;min-height:min(64vh,600px);display:grid;place-items:center}
+/* presa na tela, a dobra ocupa a viewport inteira: sobrando altura
+   apareceria a seção seguinte por baixo do pin */
+.orbita{padding-block:clamp(40px,5vh,64px);min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center}
 .orb__centro{
   position:relative;z-index:2;text-align:center;
   /* largura em px, não em ch: o `ch` resolve pelo corpo de 16px do
@@ -758,15 +763,32 @@ html:not(.js) .hero__title{opacity:1}
 .orb__centro .eyebrow{margin-bottom:16px}
 .orb__intro{color:var(--muted);font-size:14px;line-height:1.75;margin-top:16px}
 
+/* Sem moldura: os registros foram recortados no próprio limite, então
+   cada um traz a proporção que tinha na origem. Borda e fundo bege só
+   serviam para disfarçar o corte 4:5 que era forçado antes. */
 .orb__item{
   position:absolute;z-index:1;display:block;overflow:hidden;
-  width:clamp(84px,9vw,124px);border-radius:10px;
-  border:1px solid var(--line);background:var(--paper);
+  width:max-content;border-radius:10px;
   box-shadow:0 10px 26px rgba(17,17,17,.1);
-  transition:transform .4s var(--e-out),box-shadow .4s ease;
+  transition:box-shadow .4s ease;
+  /* transform pertence ao GSAP daqui em diante — ver initOrbita() */
 }
-.orb__item img{aspect-ratio:4/5;object-fit:cover;background:#f2ede3}
-.orb__item:hover{transform:scale(1.06) rotate(0deg)!important;box-shadow:0 18px 36px rgba(17,17,17,.18);z-index:3}
+/* a caixa limita, a imagem decide: um print de celular inteiro (0,47)
+   bate no teto de altura e um recorte largo (3,25) bate no de largura,
+   mas nenhum dos dois é esticado */
+.orb__item img{
+  display:block;width:auto;height:auto;
+  max-width:clamp(78px,8vw,112px);
+  max-height:clamp(96px,11.5vw,150px);
+  transition:transform .4s var(--e-out);
+}
+/* o hover escala a imagem, não o link: escalar o link brigaria com a
+   tween de posição que o GSAP mantém no mesmo transform */
+.orb__item:hover{box-shadow:0 18px 36px rgba(17,17,17,.18);z-index:3}
+/* recorte muito largo vira tirinha no teto padrão: ganha mais largura
+   para que a mensagem continue legível */
+.orb__item--largo img{max-width:clamp(120px,12vw,168px)}
+.orb__item:hover img{transform:scale(1.06)}
 
 /* esquerda */
 .orb--el1{left:0;top:4%;transform:rotate(-7deg)}
@@ -788,12 +810,16 @@ html:not(.js) .hero__title{opacity:1}
 .provas__foot p{font-size:11px;line-height:1.6;color:var(--muted);max-width:460px;text-align:center}
 
 @media(max-width:900px){
+  .orbita{min-height:0;display:block}
   /* em tela estreita não há margem lateral para orbitar: vira grade */
   .orb{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;min-height:0}
   /* no HTML o texto vem depois das peças (a órbita não tem ordem de
      leitura); na grade a ordem do DOM volta a valer, daí o order */
   .orb__centro{grid-column:1 / -1;order:-1;width:auto;margin-bottom:10px;padding:0 0 4px}
   .orb__item{position:static;width:auto;transform:none!important}
+  /* na grade a célula manda: o teto de 8vw da órbita deixaria a
+     imagem pequena no meio de uma coluna bem mais larga */
+  .orb__item img{max-width:100%;width:100%;max-height:240px;object-fit:contain}
   .orb--et1,.orb--et2,.orb--eb1,.orb--eb2{display:none}
 }
 
