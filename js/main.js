@@ -871,20 +871,38 @@ function initMotion() {
   // sem `overwrite`: vários alvos do reveal também têm parallax, e overwrite
   // mataria a tween de yPercent quando o lote entrasse na tela. `once: true`
   // já garante que cada elemento é animado uma vez só.
-  ScrollTrigger.batch('.reveal', {
-    start: 'top 88%',
-    once: true,
-    onEnter: (lote) => gsap.to(lote, {
-      opacity: 1, y: 0, duration: 0.95, ease: EASE, stagger: 0.08,
-    }),
-  });
+  // No telefone o gatilho a 88% dispara com o elemento já quase no
+  // meio da tela, e o polegar passa por cima da animação inteira. Lá
+  // ele começa assim que a borda de cima entra, e com mais tempo de
+  // curso: a tela é menor, então o trecho em que dá para ver é curto.
+  gsap.matchMedia().add(
+    { telefone: '(max-width: 900px)', amplo: '(min-width: 901px)' },
+    (ctx) => {
+      const fone = !!ctx.conditions.telefone;
+      const dur = fone ? 1.25 : 0.95;
+      const passo = fone ? 0.1 : 0.08;
 
-  gsap.utils.toArray('.reveal-stagger').forEach((grupo) => {
-    gsap.to(grupo.children, {
-      opacity: 1, y: 0, duration: 0.9, ease: EASE, stagger: 0.07,
-      scrollTrigger: { trigger: grupo, start: 'top 86%', once: true },
+      const lotes = ScrollTrigger.batch('.reveal', {
+        start: fone ? 'top 97%' : 'top 88%',
+        once: true,
+        onEnter: (lote) => gsap.to(lote, {
+          opacity: 1, y: 0, duration: dur, ease: EASE, stagger: passo,
+        }),
+      });
+
+      const grupos = gsap.utils.toArray('.reveal-stagger').map((grupo) =>
+        gsap.to(grupo.children, {
+          opacity: 1, y: 0, duration: dur, ease: EASE, stagger: passo,
+          scrollTrigger: {
+            trigger: grupo, start: fone ? 'top 96%' : 'top 86%', once: true,
+          },
+        }));
+
+      return () => {
+        lotes.forEach((t) => t.kill());
+        grupos.forEach((t) => { t.scrollTrigger?.kill(); t.kill(); });
+      };
     });
-  });
 
   /* ── 10.3 Agitação ────────────────────────────────────── */
   gsap.from('.agita__text .w', {

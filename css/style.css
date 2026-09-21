@@ -1130,7 +1130,10 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 /* a coluna da foto cedeu largura para o texto: a altura do quadro sai
    da proporção, não de um mínimo em px, então encolher a coluna é o
    que baixa a altura — mesma troca feita no retrato da hero */
-.sobre__grid{display:grid;grid-template-columns:.78fr 1.22fr;gap:72px;align-items:center}
+/* o vão entre as colunas é o mesmo que separa esta dobra da fileira
+   de bastidores logo abaixo: com 72px de um lado e 36 do outro, a
+   coluna parecia mais solta do que a linha */
+.sobre__grid{display:grid;grid-template-columns:.75fr 1.25fr;gap:36px;align-items:center}
 .sobre__foto{position:relative;overflow:hidden;border-radius:14px;background:var(--ink);
   aspect-ratio:.78;min-height:0}
 .sobre__foto img,.sobre__foto video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%}
@@ -1150,25 +1153,82 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .bastidores figcaption{font-size:11px;color:var(--muted);margin-top:10px}
 .manifesto{margin-top:clamp(48px,6vw,80px);padding-top:clamp(40px,5vw,64px);border-top:1px solid var(--line)}
 .manifesto__big{font-family:var(--serif);font-size:clamp(30px,4.4vw,58px);line-height:1.02;letter-spacing:-.055em;max-width:14ch;margin-bottom:34px}
-.manifesto__cols{columns:2;column-gap:64px;max-width:900px}
-.manifesto__cols p{break-inside:avoid;color:var(--muted);font-size:15px;line-height:1.85;margin-bottom:1.1em}
+/* duas colunas de verdade, não um fluxo em `columns`: no fluxo os dois
+   lados são o mesmo bloco cortado ao meio e não há como alinhá-los
+   entre si. Em grade cada um tem altura própria e o menor se centra
+   no maior. */
+.manifesto__cols{
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;
+  align-items:center;max-width:900px;
+}
+.manifesto__cols p{color:var(--muted);font-size:15px;line-height:1.85;margin-bottom:1.1em}
+.manifesto__col p:last-child{margin-bottom:0}
 /* fecho do manifesto: faixa larga, a pergunta de um lado e a resposta
    com o CTA do outro. Antes a pergunta ficava numa coluna estreita e
    sobrava meia dobra vazia à direita. */
 .fecho{
   display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(34px,4vw,64px);align-items:center;
   margin-top:clamp(40px,4.6vw,64px);padding:clamp(30px,3.6vw,48px);
-  background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
-  box-shadow:0 16px 38px rgba(17,17,17,.06);
+  color:#f6f1e6;
+  border:1px solid rgba(246,241,230,.1);border-radius:var(--radius);
+  box-shadow:0 24px 54px rgba(17,17,17,.24);
+  position:relative;overflow:hidden;isolation:isolate;
+  /* o grão mora no próprio cartão, embaixo das luzes: assim ele é a
+     textura do material e não um véu por cima dela. Duas malhas de
+     tamanhos diferentes — uma só, repetida, deixa ver o ladrilho. */
+  background-color:var(--deep);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.32' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)' opacity='0.08'/%3E%3C/svg%3E");
+  background-size:140px 140px,320px 320px;
+  background-blend-mode:screen,screen;
+}
+/* Duas camadas de luz girando em sentidos opostos e em tempos que não
+   são múltiplos: o encontro delas nunca se repete, e é isso que tira
+   o aspecto de mancha desenhada. Cada luz sozinha é fraca demais para
+   ter borda; o que aparece é a soma. */
+.fecho::before,
+.fecho::after{
+  content:"";position:absolute;inset:-55%;z-index:0;pointer-events:none;
+  filter:blur(52px);
+}
+.fecho::before{
+  background:
+    radial-gradient(circle at 18% 22%, rgba(176,141,87,.17) 0%, rgba(176,141,87,0) 46%),
+    radial-gradient(circle at 47% 12%, rgba(216,193,147,.11) 0%, rgba(216,193,147,0) 42%),
+    radial-gradient(circle at 78% 26%, rgba(125,101,52,.17) 0%, rgba(125,101,52,0) 48%),
+    radial-gradient(circle at 30% 56%, rgba(216,193,147,.10) 0%, rgba(216,193,147,0) 44%);
+  animation:fechoDeriva 52s linear infinite;
+}
+.fecho::after{
+  background:
+    radial-gradient(circle at 63% 50%, rgba(176,141,87,.13) 0%, rgba(176,141,87,0) 46%),
+    radial-gradient(circle at 86% 70%, rgba(246,241,230,.08) 0%, rgba(246,241,230,0) 40%),
+    radial-gradient(circle at 14% 82%, rgba(125,101,52,.15) 0%, rgba(125,101,52,0) 46%),
+    radial-gradient(circle at 52% 88%, rgba(176,141,87,.12) 0%, rgba(176,141,87,0) 44%);
+  animation:fechoDeriva 71s linear infinite reverse;
+}
+@media(prefers-reduced-motion:reduce){
+  .fecho::before,.fecho::after{animation:none}
+}
+.fecho > *{position:relative;z-index:1}
+@keyframes fechoDeriva{
+  0%{transform:rotate(0deg) scale(1.08)}
+  50%{transform:rotate(180deg) scale(1.2)}
+  100%{transform:rotate(360deg) scale(1.08)}
 }
 .fecho__q{
   font-family:var(--serif);font-size:clamp(24px,3.1vw,40px);
-  line-height:1.08;letter-spacing:-.05em;
+  line-height:1.08;letter-spacing:-.05em;color:#f6f1e6;
 }
-.fecho__lado p{color:var(--muted);font-size:15px;line-height:1.8}
-.fecho__lado .btn{margin-top:24px}
+.fecho__lado p{color:#c2b9a8;font-size:15px;line-height:1.8}
+/* o botão da casa é escuro: dentro do cartão preto ele sumiria */
+.fecho__lado .btn{
+  margin-top:24px;background:var(--paper);color:var(--ink);border-color:var(--paper);
+}
+.fecho__lado .btn:hover{
+  background:#fff;border-color:var(--champagne);box-shadow:0 10px 26px rgba(0,0,0,.4);
+}
 @media(max-width:860px){.fecho{grid-template-columns:1fr;gap:24px}}
-@media(max-width:960px){.sobre__grid{grid-template-columns:1fr;gap:34px}.sobre__foto{aspect-ratio:.8}.manifesto__cols{columns:1}}
+@media(max-width:960px){.sobre__grid{grid-template-columns:1fr;gap:34px}.sobre__foto{aspect-ratio:.8}.manifesto__cols{grid-template-columns:1fr;gap:34px}}
 
 /* ═══════════════════════════════════════════════════════════════
    OFERTA + GARANTIA
@@ -1220,10 +1280,9 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   border:1px solid #d8c7a4;overflow:hidden;
   box-shadow:0 18px 46px rgba(93,72,32,.16),inset 0 1px 0 #fff;
 }
-.garantia__selo::before{
-  content:"";position:absolute;inset:17px;border-radius:50%;
-  border:1px dashed #c9b896;
-}
+/* o fio tracejado morava aqui, em px, e caía em cima da faixa de
+   texto: os dois eram medidos em sistemas diferentes. Agora os dois
+   fios são desenhados dentro do próprio SVG, com o texto no meio. */
 /* reflexo varrendo o metal */
 .garantia__selo::after{
   content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
@@ -1243,7 +1302,11 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .garantia__dias{display:block;font:500 10px/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-top:9px}
 /* anel girando devagar — o selo "vive" sem pedir atenção */
 .garantia__anel{position:absolute;inset:0;width:100%;height:100%;animation:girar 26s linear infinite}
-.garantia__anel text{font:500 8.5px var(--sans);letter-spacing:.22em;text-transform:uppercase;fill:var(--champagne)}
+/* corpo e espacejamento resolvidos pela circunferência: a faixa
+   ocupa 99% do anel, então a frase dá a volta uma vez e fecha no
+   separador em vez de se atropelar */
+.garantia__anel text{font:500 10.5px var(--sans);letter-spacing:.3em;text-transform:uppercase;fill:var(--champagne)}
+.garantia__anel .anel__fio{fill:none;stroke:#cfbd9a;stroke-width:.7}
 @keyframes girar{to{transform:rotate(360deg)}}
 .garantia__title{font-size:clamp(30px,3.8vw,48px);text-wrap:balance}
 .garantia__texto p{color:var(--muted);font-size:15px;line-height:1.85;margin-top:16px;max-width:60ch;margin-inline:auto}
@@ -1411,7 +1474,7 @@ main{background:var(--paper)}
   .wrap{width:calc(100% - 40px)}
   .sec{padding-block:64px}
   .provas{grid-template-columns:1fr}
-  .manifesto__cols{columns:1}
+  .manifesto__cols{grid-template-columns:1fr;gap:34px}
   /* os nomes da faixa ficavam do tamanho de um título */
   .trust__track li{font-size:15px}
   .trust__track{gap:30px}

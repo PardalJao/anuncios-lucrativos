@@ -525,14 +525,21 @@
     </div>
 
     <div class="manifesto">
-      <h2 class="manifesto__big">A era da guerra<br> <em>pela atenção.</em></h2>
       <div class="manifesto__cols">
-        <p>Todos os dias, seu cliente abre o Instagram, YouTube ou qualquer outra plataforma e é bombardeado por milhares de mensagens, vídeos, ofertas e anúncios.</p>
-        <p>Seu concorrente não é mais apenas a empresa do outro lado da rua. Você está competindo com absolutamente tudo que aparece na tela do seu cliente.</p>
-        <p>Nós entramos em uma nova era. A era da guerra pela atenção. E nessa guerra, não necessariamente vence quem tem o melhor produto.</p>
-        <p>Vence quem consegue chamar atenção, comunicar melhor sua ideia e fazer as pessoas pararem tempo suficiente para ouvir o que tem a dizer.</p>
-        <p>Foi justamente por isso que eu criei o Programa Anúncios Lucrativos. Eu quis pegar tudo o que aprendi analisando, criando, testando e pensando anúncios ao longo desses anos e transformar em algo que qualquer pessoa ou negócio pudesse consultar e aplicar.</p>
-        <p>Não para formar mais um especialista em marketing. Mas para ajudar você a responder uma pergunta extremamente prática:</p>
+        <!-- duas colunas de verdade, não um fluxo em `columns`: assim
+             cada bloco tem altura própria e pode se alinhar pelo meio
+             com o outro. O título entra na coluna a que pertence. -->
+        <div class="manifesto__col">
+          <h2 class="manifesto__big">A era da guerra<br> <em>pela atenção.</em></h2>
+          <p>Todos os dias, seu cliente abre o Instagram, YouTube ou qualquer outra plataforma e é bombardeado por milhares de mensagens, vídeos, ofertas e anúncios.</p>
+          <p>Seu concorrente não é mais apenas a empresa do outro lado da rua. Você está competindo com absolutamente tudo que aparece na tela do seu cliente.</p>
+          <p>Nós entramos em uma nova era. A era da guerra pela atenção. E nessa guerra, não necessariamente vence quem tem o melhor produto.</p>
+        </div>
+        <div class="manifesto__col">
+          <p>Vence quem consegue chamar atenção, comunicar melhor sua ideia e fazer as pessoas pararem tempo suficiente para ouvir o que tem a dizer.</p>
+          <p>Foi justamente por isso que eu criei o Programa Anúncios Lucrativos. Eu quis pegar tudo o que aprendi analisando, criando, testando e pensando anúncios ao longo desses anos e transformar em algo que qualquer pessoa ou negócio pudesse consultar e aplicar.</p>
+          <p>Não para formar mais um especialista em marketing. Mas para ajudar você a responder uma pergunta extremamente prática:</p>
+        </div>
       </div>
       <div class="fecho reveal">
         <p class="fecho__q">“Como eu crio anúncios que chamam atenção e geram lucro para o <span class="junto">meu negócio?”</span></p>
@@ -599,8 +606,13 @@
   <div class="wrap garantia__grid">
     <div class="garantia__selo reveal" data-par="0.1" aria-hidden="true">
       <svg class="garantia__anel" viewBox="0 0 200 200">
-        <defs><path id="anel" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"></path></defs>
-        <text><textPath href="#anel" startOffset="0%">Garantia incondicional · 7 dias · Reembolso integral · Garantia incondicional · 7 dias · Reembolso integral · </textPath></text>
+        <defs><path id="anel" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"></path></defs>
+        <!-- os dois fios e o texto no mesmo sistema de coordenadas: é
+             o que garante que a faixa fique centrada entre eles em
+             qualquer tamanho do selo -->
+        <circle class="anel__fio" cx="100" cy="100" r="70"></circle>
+        <circle class="anel__fio" cx="100" cy="100" r="89"></circle>
+        <text><textPath href="#anel" startOffset="0%">Garantia incondicional · 7 dias · Reembolso integral · </textPath></text>
       </svg>
       <span class="garantia__miolo">
         <span class="garantia__num">7</span>
