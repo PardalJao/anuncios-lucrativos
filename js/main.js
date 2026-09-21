@@ -1290,6 +1290,257 @@ function initStickyBar() {
 }
 
 /* ───────────────────────────────────────────────────────────
+   11b. FECHO — a marca dissolvida em partículas
+   A logo é desenhada fora da tela e lida pixel a pixel: cada
+   pixel aceso vira um ponto com uma casa. O mouse empurra, a
+   mola traz de volta. As duas cores do arquivo viram duas
+   famílias — o cifrão fica dourado e o texto, papel —, então a
+   hierarquia do desenho sobrevive à dissolução.
+   ─────────────────────────────────────────────────────────── */
+function initFechoParticulas() {
+  const tela = document.querySelector('[data-particulas]');
+  if (!tela) return;
+  const cartao = tela.closest('.fecho');
+  const ctx = tela.getContext('2d');
+  if (!cartao || !ctx) return;
+
+  // o cifrão sozinho, e não o lockup inteiro: uma forma cheia e larga
+  // ainda se lê depois de virar pontos, onde as letras do nome viram borrão
+  const FONTE = 'assets/logo/al-cifrao.svg';
+  const RAZAO = 144 / 228;          // largura ÷ altura do arquivo
+  const OURO = '216,193,147';
+  const PAPEL = '196,184,163';
+
+  const MOLA = 0.046;               // o quanto a casa puxa
+  const ATRITO = 0.88;
+  const RAIO = 118;                 // alcance do mouse, em px de tela
+  const FORCA = 2.0;
+
+  const calmo = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const grosso = !window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+  const fora = document.createElement('canvas');
+  const fctx = fora.getContext('2d', { willReadFrequently: true });
+
+  let larg = 0, alt = 0, dpr = 1;
+  let pontos = [];
+  let visivel = false, rodando = false, pronto = false;
+  const rato = { x: -9999, y: -9999 };
+  const inicio = performance.now();
+
+  /* ---- medida ---- */
+  function medir() {
+    const r = cartao.getBoundingClientRect();
+    if (!r.width || !r.height) return false;
+    larg = r.width;
+    alt = r.height;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    tela.width = Math.round(larg * dpr);
+    tela.height = Math.round(alt * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return true;
+  }
+
+  /* ---- a marca vira grade de pontos ---- */
+  function amostrar() {
+    if (!pronto || !larg || !alt) return;
+
+    // empilhado o cartão fica alto e estreito: a marca sobe para o canto,
+    // onde só encontra a citação em corpo grande, e clareia — no meio ela
+    // caía justo em cima do parágrafo
+    const estreito = larg < 620;
+    const lh = Math.min(alt * (estreito ? 0.44 : 1.24), 400);
+    const lw = lh * RAZAO;
+    const passo = lw < 150 ? 3 : 4;
+
+    fora.width = Math.round(lw);
+    fora.height = Math.round(lh);
+    fctx.clearRect(0, 0, fora.width, fora.height);
+    fctx.drawImage(marca, 0, 0, fora.width, fora.height);
+
+    let px;
+    try {
+      px = fctx.getImageData(0, 0, fora.width, fora.height).data;
+    } catch (e) {
+      return;                        // canvas sujo: sai sem derrubar a página
+    }
+
+    // no desktop a marca encosta na borda direita e sangra um pouco:
+    // fica atrás do bloco de apoio, longe da citação, que é a heroína
+    const ox = larg * (estreito ? 0.845 : 0.872) - lw / 2;
+    const oy = estreito ? -lh * 0.1 : (alt - lh) / 2;
+    // quase invisível de propósito: a marca é o material do fundo, não
+    // um segundo desenho disputando com a citação
+    const alfa = estreito ? 0.11 : 0.15;
+    const novos = [];
+
+    for (let y = 0; y < fora.height; y += passo) {
+      for (let x = 0; x < fora.width; x += passo) {
+        if (px[(y * fora.width + x) * 4 + 3] < 128) continue;
+        novos.push(criar(
+          ox + x, oy + y, OURO,
+          alfa * (0.68 + Math.random() * 0.64),
+          1.5, 1.4
+        ));
+      }
+    }
+
+    // poeira solta: dá vida ao resto do cartão, onde a marca não chega
+    const poeira = Math.round((larg * alt) / 7000);
+    for (let i = 0; i < poeira; i++) {
+      novos.push(criar(
+        Math.random() * larg, Math.random() * alt,
+        Math.random() < 0.4 ? OURO : PAPEL,
+        0.03 + Math.random() * 0.055,
+        1 + Math.random() * 0.6,
+        7 + Math.random() * 9
+      ));
+    }
+
+    // agrupa por estilo: o fillStyle muda meia dúzia de vezes por quadro
+    // em vez de uma vez por ponto
+    novos.sort((a, b) => (a.estilo < b.estilo ? -1 : a.estilo > b.estilo ? 1 : 0));
+    pontos = novos;
+  }
+
+  function criar(hx, hy, cor, alfa, tam, amp) {
+    const a = Math.round(Math.min(alfa, 0.3) * 200) / 200;   // quantiza p/ agrupar
+    return {
+      hx, hy, x: hx, y: hy, vx: 0, vy: 0,
+      tam, amp,
+      fase: Math.random() * Math.PI * 2,
+      vel: 0.22 + Math.random() * 0.3,
+      perto: 0,
+      estilo: 'rgba(' + cor + ',' + a + ')',
+      cor,
+    };
+  }
+
+  /* ---- quadro ---- */
+  function quadro(agora) {
+    rodando = false;
+    if (!pontos.length) return;
+
+    const t = (agora - inicio) / 1000;
+
+    // sem mouse fino, um cursor fantasma passeia sozinho: no telefone
+    // o efeito continua sendo um efeito
+    if (grosso && !calmo.matches) {
+      rato.x = larg * (0.5 + 0.34 * Math.sin(t * 0.34));
+      rato.y = alt * (0.5 + 0.3 * Math.sin(t * 0.47 + 1.1));
+    }
+
+    const R2 = RAIO * RAIO;
+    ctx.clearRect(0, 0, larg, alt);
+
+    let estilo = '';
+    for (let i = 0; i < pontos.length; i++) {
+      const p = pontos[i];
+
+      // a casa respira: sem isso o campo fica parado esperando o mouse
+      const hx = p.hx + Math.sin(t * p.vel + p.fase) * p.amp;
+      const hy = p.hy + Math.cos(t * p.vel * 0.83 + p.fase) * p.amp;
+
+      p.vx += (hx - p.x) * MOLA;
+      p.vy += (hy - p.y) * MOLA;
+
+      const dx = p.x - rato.x;
+      const dy = p.y - rato.y;
+      const d2 = dx * dx + dy * dy;
+      if (d2 < R2) {
+        const d = Math.sqrt(d2) || 0.001;
+        const f = 1 - d / RAIO;
+        const g = f * f * FORCA;
+        p.vx += (dx / d) * g;
+        p.vy += (dy / d) * g;
+        p.perto = f;
+      } else {
+        p.perto = 0;
+      }
+
+      p.vx *= ATRITO;
+      p.vy *= ATRITO;
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.estilo !== estilo) { estilo = p.estilo; ctx.fillStyle = estilo; }
+      ctx.fillRect(p.x, p.y, p.tam, p.tam);
+    }
+
+    // segundo passe só no que o cursor tocou: acende sem virar lanterna
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < pontos.length; i++) {
+      const p = pontos[i];
+      if (p.perto < 0.05) continue;
+      ctx.fillStyle = 'rgba(' + p.cor + ',' + (p.perto * 0.22).toFixed(3) + ')';
+      ctx.fillRect(p.x - 0.4, p.y - 0.4, p.tam + 0.8, p.tam + 0.8);
+    }
+    ctx.globalCompositeOperation = 'source-over';
+
+    if (visivel && !calmo.matches) pedir();
+  }
+
+  function pedir() {
+    if (rodando) return;
+    rodando = true;
+    requestAnimationFrame(quadro);
+  }
+
+  /* ---- estático: mesmo desenho, sem laço ---- */
+  function parado() {
+    ctx.clearRect(0, 0, larg, alt);
+    let estilo = '';
+    for (let i = 0; i < pontos.length; i++) {
+      const p = pontos[i];
+      if (p.estilo !== estilo) { estilo = p.estilo; ctx.fillStyle = estilo; }
+      ctx.fillRect(p.x, p.y, p.tam, p.tam);
+    }
+  }
+
+  function refazer() {
+    if (!medir()) return;
+    amostrar();
+    if (calmo.matches) parado(); else pedir();
+  }
+
+  /* ---- entradas ---- */
+  cartao.addEventListener('pointermove', (e) => {
+    if (grosso) return;              // no toque quem manda é o fantasma
+    const r = tela.getBoundingClientRect();
+    rato.x = e.clientX - r.left;
+    rato.y = e.clientY - r.top;
+    pedir();
+  }, { passive: true });
+
+  cartao.addEventListener('pointerleave', () => {
+    rato.x = -9999; rato.y = -9999;
+  }, { passive: true });
+
+  if (window.IntersectionObserver) {
+    new IntersectionObserver((ent) => {
+      visivel = ent[0].isIntersecting;
+      if (visivel) pedir();
+    }, { rootMargin: '120px' }).observe(cartao);
+  } else {
+    visivel = true;
+  }
+
+  if (window.ResizeObserver) {
+    let esperando = false;
+    new ResizeObserver(() => {
+      if (esperando) return;
+      esperando = true;
+      requestAnimationFrame(() => { esperando = false; refazer(); });
+    }).observe(cartao);
+  }
+
+  const marca = new Image();
+  marca.decoding = 'async';
+  marca.onload = () => { pronto = true; refazer(); };
+  marca.src = FONTE;
+}
+
+/* ───────────────────────────────────────────────────────────
    12. FAQ — abre um, fecha os outros
    ─────────────────────────────────────────────────────────── */
 function initFaq() {
@@ -1318,6 +1569,7 @@ initVideosApoio();
 initStickyBar();
 initGaleria();
 initDicaZoom();
+initFechoParticulas();
 initFaq();
 initRollingText();   // depois do applyConfig, que é quem escreve os rótulos
 
