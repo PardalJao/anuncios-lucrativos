@@ -519,7 +519,7 @@ html:not(.js) .hero__title{opacity:1}
 /* rosto ou logo antes do nome: o círculo dá o mesmo tratamento a
    retrato e marca, que chegam em proporções diferentes */
 .trust__face{
-  width:28px;height:28px;flex:0 0 28px;border-radius:50%;
+  width:40px;height:40px;flex:0 0 40px;border-radius:50%;
   object-fit:cover;background:#e9e3d6;
   transition:opacity .3s ease;
 }
