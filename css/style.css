@@ -282,11 +282,15 @@ html.is-loading .preloader{
    HEADER + NAV com indicador deslizante (mecânica da V1)
    ═══════════════════════════════════════════════════════════════ */
 /* Três estados:
-   topo      → grudado, largura total, 86px de altura
-   desprende → ilha flutuante, 64px, cantos redondos (qualquer scroll > 0)
-   some      → sai por cima enquanto o scroll desce; volta ao subir     */
+   hero      → cabeçalho comum, rola junto com a página e some no fim dela
+   desprende → ilha flutuante fixa, 52px, cantos redondos; só existe ao
+               subir o scroll depois da hero
+   some      → sai por cima enquanto o scroll desce; volta ao subir
+   A fixação mora só no estado desprendido: `relative` mantém o lugar no
+   fluxo, então trocar para `sticky` não tira altura do documento nem
+   empurra o conteúdo.                                                  */
 .header{
-  position:sticky;top:0;z-index:50;
+  position:relative;top:0;z-index:50;
   background:rgba(247,244,238,.94);backdrop-filter:blur(10px);
   border:1px solid transparent;border-radius:0;
   width:100%;margin-inline:auto;
@@ -300,7 +304,7 @@ html.is-loading .preloader{
   will-change:transform,width;
 }
 .header.is-detached{
-  top:12px;
+  position:sticky;top:12px;
   width:min(1060px,calc(100% - 40px));
   border-radius:999px;border-color:var(--line);
   box-shadow:0 10px 34px rgba(17,17,17,.08);

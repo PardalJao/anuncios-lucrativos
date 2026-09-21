@@ -502,13 +502,13 @@ function initHeaderScroll() {
     if (document.fonts) document.fonts.ready.then(medirCentroDaMarca);
   }
 
+  const TOPO = 6;        // tolerância para "está no topo da página"
   const SOLTA = 90;      // piso, caso a hero não exista
   const RUIDO = 6;       // ignora tremidas de trackpad
 
-  // A hero é a única dobra onde o cabeçalho nunca desgruda: soltar a
-  // pílula no primeiro toque de scroll fazia um salto que sumia logo em
-  // seguida. Só depois que a hero sai de cena o cabeçalho vira pílula e
-  // passa a obedecer à direção do scroll. Medido, não fixo, porque a
+  // Na hero o cabeçalho é um cabeçalho comum: rola junto e vai embora
+  // com ela. A fixação só nasce ao subir o scroll depois da hero, e é
+  // sempre na forma de pílula. O limiar é medido, não fixo, porque a
   // hero é dimensionada em vh e muda com a barra do navegador móvel.
   const hero = document.querySelector('.hero');
   let limiar = SOLTA;
@@ -537,10 +537,20 @@ function initHeaderScroll() {
     const delta = y - ultimo;
     const menu = header.querySelector('.nav__pill.is-open');
 
-    if (y < limiar) {
-      // ainda na hero: barra de largura total, sempre em cena
+    if (y <= TOPO) {
+      // topo da página: o cabeçalho ocupa o próprio lugar no fluxo
       header.classList.remove('is-detached', 'is-hidden');
       if (escondido) { escondido = false; avisar(); }
+    } else if (y < limiar) {
+      // dentro da hero o cabeçalho não se fixa: rola junto e sai de cena
+      // sozinho, sem ninguém mandar. O único caso a tratar é chegar aqui
+      // vindo de baixo com a pílula em cena — ela sai por cima primeiro,
+      // porque tirar forma e fixação no mesmo quadro a faria evaporar.
+      if (!escondido && header.classList.contains('is-detached')) {
+        escondido = true;
+        header.classList.add('is-hidden');
+        avisar();
+      }
     } else if (Math.abs(delta) > RUIDO && !menu) {
       const novo = delta > 0;
       if (novo !== escondido) {
@@ -555,7 +565,10 @@ function initHeaderScroll() {
       }
     }
 
-    if (fab) fab.classList.toggle('is-on', escondido && !emZonaDeCta());
+    // o FAB substitui o cabeçalho quando ele sai; na hero não há o que
+    // substituir, o cabeçalho sai de cena por rolagem e não por estado.
+    if (fab) fab.classList.toggle(
+      'is-on', escondido && y >= limiar && !emZonaDeCta());
     ultimo = y;
   };
 
@@ -976,7 +989,7 @@ function initMotion() {
 function initStickyBar() {
   const bar = document.querySelector('[data-sticky]');
   const oferta = document.querySelector('#oferta');
-  const ctaHero = document.querySelector('.hero__cta');
+  const hero = document.querySelector('.hero');
   if (!bar) return;
 
   bar.hidden = false;
@@ -985,16 +998,19 @@ function initStickyBar() {
   // entra; subindo, a barra sai e o cabeçalho volta com o CTA. Na hero
   // a barra não aparece em nenhuma direção — o botão da própria dobra
   // já é o convite, e o cabeçalho volta sem CTA para não repetir.
-  let naHero = !!ctaHero;
+  let naHero = !!hero;
   let naOferta = false;
   let descendo = false;
 
   const sync = () => bar.classList.toggle(
     'is-on', descendo && !naHero && !naOferta);
 
-  if (ctaHero) {
+  // a dobra inteira, não só o botão dela: agora que o cabeçalho some
+  // sozinho no fim da hero, olhar apenas o botão deixava a barra entrar
+  // no meio da própria hero.
+  if (hero) {
     new IntersectionObserver(([e]) => { naHero = e.isIntersecting; sync(); },
-      { threshold: 0 }).observe(ctaHero);
+      { threshold: 0 }).observe(hero);
   }
 
   // na oferta os botões da seção já estão em cena
