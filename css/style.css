@@ -1456,28 +1456,45 @@ main{background:var(--paper)}
   .preview__bottom{justify-content:center}
   .preview__title{text-align:center}
   .preview__bottom{gap:10px}
-  /* o recuo de desktop empurrava o primeiro cartão para fora da margem
-     e o fade comia a borda dele logo na entrada */
-  /* A largura vem da viewport, não da margem negativa: pinado, o
-     `calc(50% - 50vw)` passa a resolver contra o pin-spacer e a caixa
-     encolhia 40px no meio do caminho — era a mesma diferença que
-     desencontrava a conta do curso.
-     A máscara fica: sem ela o cartão da beirada era decepado num fio
-     reto contra o branco. */
-  .trilho{width:calc(100vw - var(--sbw,0px));max-width:none;
-    margin-inline:calc(50% - 50vw + var(--sbw,0px) / 2);
-    padding-block:6px 14px;padding-inline:20px;
-    -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
-    mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
-  /* o trilho sangra até a borda da tela, mas o primeiro cartão tem de
-     começar na linha do título: o recuo é a própria margem do
-     conteúdo, não um valor solto. Declarado aqui, depois do 20px,
-     porque as duas regras têm a mesma especificidade. */
-  @media(min-width:561px){
-    .trilho{padding-inline:calc((100vw - var(--sbw,0px) - min(390px,100vw - 64px)) / 2)}
+  /* ── Pilha vertical no lugar do trilho ────────────────────────
+     O carrossel horizontal preso pedia medidas que o Safari do iPhone
+     desencontrava a cada mudança da barra de endereço, e presa só a
+     caixa sobrava meia tela vazia. Aqui não há trilho, nem pin, nem
+     conta nenhuma: cada cartão gruda no topo com `position:sticky` e o
+     seguinte sobe por cima, deixando uma fresta do anterior à mostra.
+     O `:not(.is-pinned)` entra na lista porque a regra do carrossel
+     nativo tem essa especificidade e venceria só pelo seletor. */
+  .trilho,
+  .trilho:not(.is-pinned){
+    width:auto;max-width:none;margin-inline:0;padding:0;
+    overflow:visible;scroll-snap-type:none;
+    -webkit-mask-image:none;mask-image:none;
   }
-  .trilho__track{gap:14px}
-  .card{flex-basis:min(78vw,300px);padding:22px}
+  .trilho__track{display:flex;flex-direction:column;width:auto;gap:0}
+  .trilho__track .card{
+    position:sticky;flex:0 0 auto;width:100%;
+    /* sem sobreposição no repouso: com -150 o cartão de cima entrava
+       comendo a descrição do de baixo, que assim nunca era lida
+       inteira. O empilhamento vem do sticky, não da margem. */
+    margin-bottom:10px;
+    box-shadow:0 -8px 26px rgba(93,72,32,.1);
+  }
+  .trilho__track .card:last-child{margin-bottom:0}
+  /* o topo cresce 9px por cartão: é essa escadinha que deixa a beirada
+     dos de baixo aparecendo em vez de sumirem por completo */
+  .trilho__track .card:nth-child(1){top:70px;z-index:1}
+  .trilho__track .card:nth-child(2){top:79px;z-index:2}
+  .trilho__track .card:nth-child(3){top:88px;z-index:3}
+  .trilho__track .card:nth-child(4){top:97px;z-index:4}
+  .trilho__track .card:nth-child(5){top:106px;z-index:5}
+  .trilho__track .card:nth-child(6){top:115px;z-index:6}
+  .trilho__track .card:nth-child(7){top:124px;z-index:7}
+  /* o hover do desktop levanta o cartão; no toque ele fica grudado
+     depois do tap e desalinha a pilha */
+  .trilho__track .card:hover{transform:none;box-shadow:0 -8px 26px rgba(93,72,32,.1)}
+  /* não há mais para onde rolar de lado */
+  .trilho__hint{display:none}
+  .card{padding:22px}
   .provas{grid-template-columns:repeat(2,minmax(0,1fr))}
   .bastidores{grid-template-columns:1fr}
   body{padding-bottom:76px}

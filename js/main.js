@@ -1016,65 +1016,22 @@ function initMotion() {
     };
   });
 
-  /* ── 10.5b O mesmo trilho no telefone ──────────────────
-     No dedo o carrossel nativo pedia um gesto lateral que quase
-     ninguém dá: quem rola a página em linha reta via só o primeiro
-     cartão e um pedaço do segundo, que é o "corte" que aparecia.
-     Aqui o scroll vertical move o trilho, como no desktop.
+  /* ── 10.5b No telefone não há trilho ───────────────────
+     O carrossel preso pedia medidas — largura da caixa, curso do pin —
+     e o Safari do iPhone desencontrava todas a cada mudança da barra
+     de endereço. Presa só a caixa, ainda sobrava meia tela vazia.
+     A dobra empilha os cartões no CSS, com `position:sticky`, e não
+     precisa de JavaScript nenhum: não há nada aqui de propósito. */
 
-     Prende-se a seção inteira, e não só a caixa do trilho. Presa só a
-     caixa, ela mede 544 numa tela de 932 e sobravam 388px de nada por
-     baixo — 42% do ecrã vazio durante toda a viagem lateral. Com o
-     título junto, como no desktop, o que sobra cai para menos da
-     metade disso. */
-  gsap.matchMedia().add('(max-width: 1024px)', () => {
-    const box = document.querySelector('[data-hscroll]');
-    const track = document.querySelector('[data-htrack]');
-    const sec = document.querySelector('.entregaveis');
-    if (!box || !track || !sec) return;
 
-    box.classList.add('is-pinned');
-
-    // A medida sai de `onRefreshInit`, que a ScrollTrigger chama com os
-    // pins desfeitos, e fica guardada: `end` e tween leem o mesmo
-    // número. Com duas contas avaliadas em momentos diferentes o trilho
-    // andava a diferença a mais e o último cartão saía pela esquerda.
-    let curso = 1;
-    const medir = () => {
-      const cs = getComputedStyle(box);
-      const visivel = box.clientWidth
-        - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-      curso = Math.max(1, track.scrollWidth - visivel);
-    };
-    medir();
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sec, start: 'top top',
-        end: () => '+=' + curso,
-        // No dedo o scrub tem de ser seco. Com 0.8 o trilho ficava quase
-        // um segundo atrás do gesto e, como o iOS tem inércia, o dedo já
-        // tinha parado enquanto os cartões seguiam andando — é isso que
-        // se lê como travado. anticipatePin sai junto: ele adianta a
-        // prisão e no toque isso aparece como um salto.
-        pin: true, scrub: true, invalidateOnRefresh: true,
-        onRefreshInit: medir,
-      },
+  /* ── 10.6 Cartões do trilho em cascata ───────────────────
+     Só no desktop: no telefone eles já entram empilhando, e um `y`
+     sobrando num elemento `sticky` desloca a parada dele. */
+  gsap.matchMedia().add('(min-width: 1025px)', () => {
+    gsap.from('.trilho__track .card', {
+      opacity: 0, y: 26, duration: 0.85, ease: EASE, stagger: 0.06,
+      scrollTrigger: { trigger: '.entregaveis', start: 'top 78%', once: true },
     });
-    tl.to(track, { x: () => -curso, ease: 'none' });
-
-    return () => {
-      box.classList.remove('is-pinned');
-      tl.scrollTrigger?.kill();
-      tl.kill();
-      gsap.set(track, { x: 0 });
-    };
-  });
-
-  /* ── 10.6 Cartões do trilho em cascata ─────────────────── */
-  gsap.from('.trilho__track .card', {
-    opacity: 0, y: 26, duration: 0.85, ease: EASE, stagger: 0.06,
-    scrollTrigger: { trigger: '.entregaveis', start: 'top 78%', once: true },
   });
 
   initParallax();
