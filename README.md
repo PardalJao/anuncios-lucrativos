@@ -64,6 +64,34 @@ poster (que é o primeiro quadro) fica no lugar.
 cd site-v3 && python3 -m http.server 4323
 ```
 
+## Publicar
+
+O projeto da Vercel está conectado a este repositório. Não se usa mais
+`vercel deploy` a partir da máquina — quem publica é o Git:
+
+| O que você faz | O que acontece |
+|---|---|
+| `git push` na `main` | vai para produção em `anuncios-lucrativos.vercel.app` |
+| `git push` em outra branch | gera um link de preview, produção não muda |
+
+Para mexer sem risco, trabalhe numa branch e só junte na `main` quando o
+preview estiver aprovado:
+
+```bash
+git checkout -b ajuste-do-preco
+# edita, testa, commita
+git push -u origin ajuste-do-preco     # sai um link de preview
+```
+
+Aprovado:
+
+```bash
+git checkout main && git merge ajuste-do-preco && git push
+```
+
+Se algo quebrar em produção, o painel da Vercel tem **Instant Rollback**, que
+devolve o deploy anterior sem precisar de Git.
+
 ---
 
 ## De onde veio cada parte
