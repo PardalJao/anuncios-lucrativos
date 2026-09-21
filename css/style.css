@@ -777,7 +777,10 @@ html:not(.js) .hero__title{opacity:1}
 /* presa na tela, a dobra ocupa a viewport inteira: sobrando altura
    apareceria a seção seguinte por baixo do pin */
 .orbita{padding-block:clamp(40px,5vh,64px);min-height:100vh;
-  display:flex;flex-direction:column;justify-content:center}
+  display:flex;flex-direction:column;justify-content:center;
+  /* na entrada as peças partem de 1,35x fora do centro; sem clipe elas
+     esticam o documento e criam rolagem lateral antes da dobra */
+  overflow:hidden}
 .orb__centro{
   position:relative;z-index:2;text-align:center;
   /* largura em px, não em ch: o `ch` resolve pelo corpo de 16px do
@@ -1008,7 +1011,10 @@ html:not(.js) .hero__title{opacity:1}
   background:var(--paper);padding:44px 0 24px;
 }
 body::after{content:"";display:block;height:var(--rodape,300px)}
-main,.hero,.header{position:relative;z-index:1}
+/* O header fica de fora: ele já tem z-index:50 e position:sticky, e
+   entrar aqui zerava as duas coisas — o cabeçalho rolava junto com a
+   página e nunca reaparecia na subida. */
+main,.hero{position:relative;z-index:1}
 main{background:var(--paper)}
 /* a última dobra ganha a sombra que denuncia o rodapé por baixo */
 #faq{box-shadow:0 26px 40px rgba(17,17,17,.1)}
@@ -1066,19 +1072,14 @@ main{background:var(--paper)}
   /* numa coluna só, a quebra natural larga órfãs como "vez." e
      "receber" sozinhas na linha; balance distribui melhor */
   .sec__title,.oferta__title,.garantia__title,.manifesto__big,.agita__saida{text-wrap:balance}
-  .nav{height:74px;gap:12px}
-  .nav__toggle{display:block;order:3}
+  /* No telefone o cabeçalho é só marca e CTA. O hambúrguer escondia
+     âncoras para seções que o visitante atravessa rolando de qualquer
+     jeito: cobrava um toque e uma camada para navegar numa página que
+     é lida em linha reta. Sem ele, a compra fica sempre a um toque. */
+  .nav{height:74px;gap:12px;justify-content:space-between}
+  .nav__toggle{display:none}
+  .nav__pill{display:none}
   .nav__cta{margin-left:auto;font-size:12px;padding-inline:14px}
-  .nav__pill{
-    display:none;position:absolute;top:73px;left:0;right:0;z-index:40;
-    flex-direction:column;align-items:stretch;gap:2px;
-    padding:16px 32px 22px;background:var(--paper);
-    border-bottom:1px solid var(--line);box-shadow:0 14px 20px rgba(17,17,17,.04);
-  }
-  .nav__pill.is-open{display:flex}
-  .nav__indicator{display:none}
-  .nav__item{min-height:48px;padding:0 8px}
-  .nav__label{font-size:15px}
   .flow{grid-template-columns:1fr;gap:10px}
   .flow__arrow{transform:rotate(90deg)}
   /* empilhado, o cartão é largo e o texto encostado à esquerda fica
@@ -1115,9 +1116,20 @@ main{background:var(--paper)}
   /* os nomes da faixa ficavam do tamanho de um título */
   .trust__track li{font-size:15px}
   .trust__track{gap:30px}
-  /* o CTA do topo não cabe ao lado da marca e do hambúrguer;
-     a barra fixa do rodapé já carrega a mesma ação */
-  .nav__cta{display:none}
+  /* o CTA volta ao topo: sem o hambúrguer sobra espaço ao lado da marca,
+     e ter a compra visível na primeira tela vale mais do que depender
+     só da barra fixa do rodapé */
+  .nav__cta{padding-inline:12px;font-size:11.5px}
+}
+
+/* Telefone estreito: marca e CTA lado a lado passam de 320px por poucos
+   pixels. Apertar os dois resolve sem tirar nenhum dos dois da tela. */
+@media(max-width:380px){
+  .nav{gap:8px}
+  .brand{font-size:13px;gap:7px}
+  .brand__mark{width:20px;height:20px}
+  .nav__cta{font-size:10.5px;padding-inline:10px;gap:8px}
+  .nav__cta .btn__icon{font-size:13px}
 }
 
 /* ═══════════════════════════════════════════════════════════════
