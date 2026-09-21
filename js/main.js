@@ -1060,65 +1060,72 @@ function initMotion() {
    ─────────────────────────────────────────────────────────── */
 function initGaleria() {
   const cx = document.querySelector('[data-galeria]');
-  const palco = cx && cx.querySelector('[data-galeria-img]');
+  const trilho = cx && cx.querySelector('[data-galeria-trilho]');
   const conta = cx && cx.querySelector('[data-galeria-conta]');
   const pecas = [...document.querySelectorAll('.orb__item')];
-  if (!cx || !palco || !pecas.length) return;
+  if (!cx || !trilho || !pecas.length) return;
 
   let atual = -1;
   let quemAbriu = null;
-
-  // guardar a posição antes de travar o scroll: `overflow:hidden` no
-  // html zera o scroll de algumas engines, e a pessoa voltaria da
-  // galeria para o topo da página
   let posicao = 0;
 
-  const fonte = (el) => el.getAttribute('href');
-  const legenda = (el) => {
-    const img = el.querySelector('img');
-    return (img && img.getAttribute('alt')) || '';
+  // Um slide por peça, criados uma vez. O `src` só entra perto da vez
+  // de aparecer: doze arquivos de 1200px de uma vez seria a dobra
+  // inteira baixada por causa de um clique.
+  const slides = pecas.map((peca) => {
+    const fig = document.createElement('figure');
+    fig.className = 'galeria__slide';
+    const img = document.createElement('img');
+    img.decoding = 'async';
+    img.alt = (peca.querySelector('img') || {}).alt || '';
+    fig.dataset.fonte = peca.getAttribute('href');
+    fig.appendChild(img);
+    trilho.appendChild(fig);
+    return fig;
+  });
+
+  const carregar = (i) => {
+    const fig = slides[i];
+    if (!fig) return;
+    const img = fig.querySelector('img');
+    if (!img.getAttribute('src')) img.src = fig.dataset.fonte;
   };
 
-  // o vizinho já vem no ar: passar de um para o outro não pode piscar
-  const adiantar = (i) => {
-    const alvo = pecas[(i + pecas.length) % pecas.length];
-    if (alvo) new Image().src = fonte(alvo);
-  };
+  const passos = cx.querySelectorAll('[data-galeria-passo]');
+  const limites = () => passos.forEach((b) => {
+    const d = Number(b.dataset.galeriaPasso);
+    b.disabled = (d < 0 && atual === 0) || (d > 0 && atual === slides.length - 1);
+  });
 
   const mostrar = (i) => {
-    atual = (i + pecas.length) % pecas.length;
-    const peca = pecas[atual];
-    cx.classList.remove('is-pronta');
-    palco.src = fonte(peca);
-    palco.alt = legenda(peca);
-    if (conta) conta.textContent = (atual + 1) + ' / ' + pecas.length;
-    const pronto = () => cx.classList.add('is-pronta');
-    if (palco.complete) pronto(); else palco.addEventListener('load', pronto, { once: true });
-    adiantar(atual + 1);
-    adiantar(atual - 1);
+    atual = Math.max(0, Math.min(slides.length - 1, i));
+    trilho.style.setProperty('--i', atual);
+    slides.forEach((f, k) => f.classList.toggle('is-atual', k === atual));
+    if (conta) conta.textContent = (atual + 1) + ' / ' + slides.length;
+    // o aberto e os dois vizinhos de cada lado, que é o que a esteira
+    // deixa ver e o que um passo de seta pode revelar
+    for (let k = atual - 2; k <= atual + 2; k++) carregar(k);
+    limites();
   };
 
   const abrir = (i, origem) => {
     quemAbriu = origem || null;
     posicao = window.scrollY;
     cx.hidden = false;
-    // um quadro entre sair do `hidden` e ganhar a classe, senão a
-    // transição de opacidade não tem de onde partir
     requestAnimationFrame(() => cx.classList.add('is-aberta'));
     document.documentElement.classList.add('tem-galeria');
     document.documentElement.style.top = (-posicao) + 'px';
     mostrar(i);
-    const fechar = cx.querySelector('[data-galeria-fechar]:not([tabindex])');
-    if (fechar) fechar.focus({ preventScroll: true });
+    const x = cx.querySelector('[data-galeria-fechar]:not([tabindex])');
+    if (x) x.focus({ preventScroll: true });
   };
 
   const fechar = () => {
-    cx.classList.remove('is-aberta', 'is-pronta');
+    cx.classList.remove('is-aberta');
     document.documentElement.classList.remove('tem-galeria');
     document.documentElement.style.top = '';
     window.scrollTo(0, posicao);
-    const esconder = () => { cx.hidden = true; palco.removeAttribute('src'); };
-    setTimeout(esconder, reduced ? 0 : 320);
+    setTimeout(() => { cx.hidden = true; }, reduced ? 0 : 320);
     if (quemAbriu) quemAbriu.focus({ preventScroll: true });
     atual = -1;
   };
@@ -1131,9 +1138,14 @@ function initGaleria() {
     });
   });
 
+  // clicar num vizinho da esteira também anda
+  slides.forEach((fig, i) => fig.addEventListener('click', () => {
+    if (i !== atual) mostrar(i);
+  }));
+
   cx.querySelectorAll('[data-galeria-fechar]').forEach(
     (b) => b.addEventListener('click', fechar));
-  cx.querySelectorAll('[data-galeria-passo]').forEach(
+  passos.forEach(
     (b) => b.addEventListener('click', () => mostrar(atual + Number(b.dataset.galeriaPasso))));
 
   document.addEventListener('keydown', (e) => {
@@ -1143,7 +1155,6 @@ function initGaleria() {
     else if (e.key === 'ArrowLeft') mostrar(atual - 1);
   });
 
-  // arrastar para o lado no telefone
   let x0 = null;
   cx.addEventListener('touchstart', (e) => { x0 = e.changedTouches[0].clientX; }, { passive: true });
   cx.addEventListener('touchend', (e) => {
@@ -1152,6 +1163,56 @@ function initGaleria() {
     x0 = null;
     if (Math.abs(d) > 45) mostrar(atual + (d < 0 ? 1 : -1));
   }, { passive: true });
+}
+
+/* ───────────────────────────────────────────────────────────
+   10c. DICA DE CLIQUE
+   O cursor de lupa do navegador prometia zoom na própria imagem.
+   No lugar dele, uma etiqueta que segue o ponteiro e diz o que
+   o clique faz de verdade.
+   ─────────────────────────────────────────────────────────── */
+function initDicaZoom() {
+  const dica = document.querySelector('[data-dica]');
+  const pecas = [...document.querySelectorAll('.orb__item')];
+  if (!dica || !pecas.length) return;
+  if (!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+
+  let alvoX = 0, alvoY = 0, x = 0, y = 0;
+  let seguindo = false;
+
+  // a etiqueta persegue o cursor com atraso: colada nele ela vira
+  // parte do ponteiro e some da leitura
+  const correr = () => {
+    x += (alvoX - x) * 0.22;
+    y += (alvoY - y) * 0.22;
+    dica.style.setProperty('--x', x.toFixed(1) + 'px');
+    dica.style.setProperty('--y', y.toFixed(1) + 'px');
+    if (seguindo) requestAnimationFrame(correr);
+  };
+
+  const mover = (e) => { alvoX = e.clientX; alvoY = e.clientY; };
+
+  pecas.forEach((peca) => {
+    peca.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      alvoX = x = e.clientX; alvoY = y = e.clientY;
+      dica.style.setProperty('--x', x + 'px');
+      dica.style.setProperty('--y', y + 'px');
+      dica.classList.add('is-on');
+      if (!seguindo) { seguindo = true; requestAnimationFrame(correr); }
+      window.addEventListener('pointermove', mover, { passive: true });
+    });
+    peca.addEventListener('pointerleave', () => {
+      dica.classList.remove('is-on');
+      seguindo = false;
+      window.removeEventListener('pointermove', mover);
+    });
+  });
+
+  // com a galeria aberta o ponteiro não está mais sobre a peça
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') dica.classList.remove('is-on');
+  });
 }
 
 /* ───────────────────────────────────────────────────────────
@@ -1224,6 +1285,7 @@ initHeroVideo();
 initVideosApoio();
 initStickyBar();
 initGaleria();
+initDicaZoom();
 initFaq();
 initRollingText();   // depois do applyConfig, que é quem escreve os rótulos
 

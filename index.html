@@ -710,14 +710,26 @@
   <span class="fab__disc" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></span>
 </a>
 
+<!-- Segue o cursor sobre as peças da órbita. Só aparece em ponteiro
+     fino: no dedo não existe hover e ela ficaria presa na tela. -->
+<div class="dica" data-dica aria-hidden="true">
+  <span class="dica__ico">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="11" cy="11" r="7"/><path d="M16 16 L21 21"/><path d="M11 8 V14 M8 11 H14"/>
+    </svg>
+  </span>
+  <span class="dica__texto">Ver em detalhe</span>
+</div>
+
 <!-- Galeria dos registros. Abre no clique de uma peça da órbita; os
      links continuam apontando para o arquivo, então sem JS o
      comportamento antigo (abrir em outra aba) segue valendo. -->
 <div class="galeria" data-galeria role="dialog" aria-modal="true" aria-label="Registros" hidden>
   <button class="galeria__fundo" type="button" data-galeria-fechar tabindex="-1" aria-hidden="true"></button>
-  <figure class="galeria__palco">
-    <img data-galeria-img src="" alt="" decoding="async">
-  </figure>
+  <div class="galeria__palco">
+    <!-- os slides nascem no JS a partir das próprias peças da órbita -->
+    <div class="galeria__trilho" data-galeria-trilho></div>
+  </div>
   <button class="galeria__btn galeria__btn--fechar" type="button" data-galeria-fechar aria-label="Fechar galeria">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18"/></svg>
   </button>

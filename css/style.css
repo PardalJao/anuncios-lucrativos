@@ -914,7 +914,7 @@ html:not(.js) .hero__title{opacity:1}
    serviam para disfarçar o corte 4:5 que era forçado antes. */
 .orb__item{
   position:absolute;z-index:1;display:block;overflow:hidden;
-  width:max-content;border-radius:10px;cursor:zoom-in;
+  width:max-content;border-radius:10px;cursor:pointer;
   /* o fio interno fecha a borda do recorte: sem ele o pixel da ponta
      do print encosta direto no fundo claro e a quina parece falhada */
   box-shadow:inset 0 0 0 1px rgba(17,17,17,.07),0 10px 26px rgba(17,17,17,.1);
@@ -960,8 +960,10 @@ html:not(.js) .hero__title{opacity:1}
 /* topo e base, acima e abaixo do texto */
 .orb--et1{left:25%;top:-4%;transform:rotate(4deg)}
 .orb--et2{right:25%;top:-3%;transform:rotate(-6deg)}
-.orb--eb1{left:29%;bottom:-4%;transform:rotate(-5deg)}
-.orb--eb2{right:29%;bottom:-3%;transform:rotate(7deg)}
+/* as de baixo não passam da linha da órbita: abaixo dela vem a nota de
+   rodapé, e a peça inclinada entrava por cima do texto */
+.orb--eb1{left:29%;bottom:1%;transform:rotate(-5deg)}
+.orb--eb2{right:29%;bottom:1%;transform:rotate(7deg)}
 
 /* com a galeria aberta a página para de rolar por trás. `position:
    fixed` no html (e não `overflow:hidden`) porque o rodapé revelado
@@ -985,18 +987,39 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   position:absolute;inset:0;border:0;padding:0;cursor:zoom-out;
   background:rgba(17,15,12,.88);backdrop-filter:blur(6px);
 }
+/* O palco é uma esteira: o registro aberto fica no centro e os
+   vizinhos aparecem pelas bordas, menores e mais apagados. É o que
+   diz que há mais coisa para o lado — uma imagem só no escuro não
+   conta isso. */
 .galeria__palco{
-  position:relative;margin:0;display:grid;place-items:center;
-  max-width:min(100%,980px);max-height:100%;
+  position:absolute;inset:0;overflow:hidden;
+  --larg:min(64vw,560px);
+  --vao:clamp(16px,2.4vw,34px);
 }
-.galeria__palco img{
-  display:block;max-width:100%;max-height:min(84vh,900px);
+.galeria__trilho{
+  position:absolute;left:50%;top:50%;display:flex;align-items:center;
+  gap:var(--vao);
+  /* o recuo é meia LARGURA DE SLIDE, não meia esteira: `-50%` aqui
+     resolveria pelos 7000px da fila inteira e jogaria tudo para fora
+     da tela */
+  transform:translateX(calc(var(--larg) / -2)) translateY(-50%)
+            translateX(calc(var(--i,0) * -1 * (var(--larg) + var(--vao))));
+  transition:transform .55s var(--e-house);
+}
+.galeria__slide{
+  flex:0 0 var(--larg);margin:0;display:grid;place-items:center;
+  cursor:pointer;opacity:.3;transform:scale(.82);
+  transition:opacity .45s ease,transform .55s var(--e-house);
+}
+.galeria__slide.is-atual{opacity:1;transform:none;cursor:default}
+.galeria__slide img{
+  display:block;max-width:100%;max-height:min(80vh,860px);
   width:auto;height:auto;border-radius:12px;
   box-shadow:0 30px 80px rgba(0,0,0,.5);
-  transform:scale(.97);opacity:0;
-  transition:transform .4s var(--e-out),opacity .3s ease;
 }
-.galeria.is-pronta .galeria__palco img{transform:none;opacity:1}
+/* a moldura só entra quando a imagem chega: sem isso um retângulo
+   vazio pisca no lugar antes do arquivo carregar */
+.galeria__slide img:not([src]){box-shadow:none}
 .galeria__btn{
   position:absolute;z-index:2;display:grid;place-items:center;
   width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.22);
@@ -1006,6 +1029,8 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .galeria__btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .galeria__btn:hover{background:rgba(40,36,30,.85);border-color:rgba(255,255,255,.4)}
 .galeria__btn:active{transform:scale(.94)}
+.galeria__btn[disabled]{opacity:.26;cursor:default}
+.galeria__btn[disabled]:hover{background:rgba(20,18,15,.55);border-color:rgba(255,255,255,.22)}
 .galeria__btn--fechar{top:clamp(12px,3vw,26px);right:clamp(12px,3vw,26px)}
 .galeria__btn--ant{left:clamp(10px,2.4vw,26px);top:50%;margin-top:-24px}
 .galeria__btn--prox{right:clamp(10px,2.4vw,26px);top:50%;margin-top:-24px}
@@ -1023,10 +1048,41 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   .galeria__palco img{max-height:72vh}
 }
 @media(prefers-reduced-motion:reduce){
-  .galeria,.galeria__palco img{transition:none}
+  .galeria,.galeria__trilho,.galeria__slide{transition:none}
 }
 
-.provas__foot{display:flex;align-items:center;justify-content:center;gap:30px;margin-top:34px;flex-wrap:wrap}
+/* ── Dica de clique nas peças ──────────────────────────────────
+   Substitui o cursor de lupa do navegador: ele dizia "zoom" e a
+   peça na verdade abre uma galeria. */
+.dica{
+  position:fixed;left:0;top:0;z-index:180;pointer-events:none;
+  display:flex;align-items:center;gap:9px;
+  padding:8px 14px 8px 9px;border-radius:999px;
+  background:rgba(21,19,15,.92);color:#f7f4ee;
+  font:500 12px/1 var(--sans);letter-spacing:.01em;white-space:nowrap;
+  box-shadow:0 10px 30px rgba(17,17,17,.28);
+  transform:translate(var(--x,0),var(--y,0)) translate(14px,14px) scale(.7);
+  opacity:0;transition:opacity .22s ease,scale .3s var(--e-out);
+}
+.dica.is-on{opacity:1;scale:1}
+.dica__ico{
+  display:grid;place-items:center;width:24px;height:24px;border-radius:50%;
+  background:rgba(247,244,238,.12);
+}
+.dica__ico svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round}
+.dica.is-on .dica__ico{animation:dicaPulso 1.8s var(--e-out) infinite}
+@keyframes dicaPulso{
+  0%,100%{transform:scale(1)}
+  45%{transform:scale(1.14)}
+}
+/* sem hover não há cursor para seguir */
+@media(hover:none),(pointer:coarse){.dica{display:none}}
+@media(prefers-reduced-motion:reduce){
+  .dica{transition:opacity .2s ease}
+  .dica.is-on .dica__ico{animation:none}
+}
+
+.provas__foot{display:flex;align-items:center;justify-content:center;gap:30px;margin-top:clamp(34px,4vh,52px);flex-wrap:wrap}
 .provas__foot p{font-size:11px;line-height:1.7;color:var(--muted);max-width:300px;text-align:center}
 
 /* No telefone a órbita não tem margem lateral para existir, mas a
