@@ -966,13 +966,21 @@ function initMotion() {
         return () => sec.classList.remove('is-pinned');
       }
 
-      pilares.forEach((pilar, i) => {
+      // empilhado, quem revelava os cartões era o modo pinado — que aqui
+      // não existe. Sem isto os três chegam prontos e a dobra nasce morta:
+      // cada um entra no seu próprio gatilho, com o contador junto
+      pilares.forEach((pilar) => {
         const c = countUp(pilar.querySelector('[data-count]'));
         const n = { v: 0 };
+
+        gsap.from(pilar, {
+          opacity: 0, y: 30, duration: 1.25, ease: EASE,
+          scrollTrigger: { trigger: pilar, start: 'top 92%', once: true },
+        });
         gsap.to(n, {
-          v: c.alvo, duration: 1.4, ease: 'power2.out', delay: i * 0.1,
+          v: c.alvo, duration: 1.4, ease: 'power2.out', delay: 0.2,
           onUpdate: () => c.write(n.v),
-          scrollTrigger: { trigger: pilar, start: 'top 86%', once: true },
+          scrollTrigger: { trigger: pilar, start: 'top 92%', once: true },
         });
       });
     }
