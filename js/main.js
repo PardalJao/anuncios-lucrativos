@@ -1022,24 +1022,23 @@ function initMotion() {
      cartão e um pedaço do segundo, que é o "corte" que aparecia.
      Aqui o scroll vertical move o trilho, como no desktop.
 
-     A diferença é o que fica preso: no desktop a seção inteira, com
-     título e tudo. Numa tela de telefone isso não cabe — só o cartão
-     já passa de 500px — e o rodapé dele ficaria fora de vista o
-     trilho todo. Então prende-se só a caixa do trilho: o título rola
-     e sai normalmente, e o cartão inteiro fica em cena. */
+     Prende-se a seção inteira, e não só a caixa do trilho. Presa só a
+     caixa, ela mede 544 numa tela de 932 e sobravam 388px de nada por
+     baixo — 42% do ecrã vazio durante toda a viagem lateral. Com o
+     título junto, como no desktop, o que sobra cai para menos da
+     metade disso. */
   gsap.matchMedia().add('(max-width: 1024px)', () => {
     const box = document.querySelector('[data-hscroll]');
     const track = document.querySelector('[data-htrack]');
-    if (!box || !track) return;
+    const sec = document.querySelector('.entregaveis');
+    if (!box || !track || !sec) return;
 
     box.classList.add('is-pinned');
 
     // A medida sai de `onRefreshInit`, que a ScrollTrigger chama com os
-    // pins já desfeitos. Lendo `box.clientWidth` com o pin montado a
-    // conta dava outro número — aqui deu 1834 na criação e 1874 depois,
-    // 40px de diferença — e como o `end` usava um e o tween usava o
-    // outro, o trilho corria mais do que o curso e o último cartão
-    // saía pela esquerda, com rolagem vazia atrás.
+    // pins desfeitos, e fica guardada: `end` e tween leem o mesmo
+    // número. Com duas contas avaliadas em momentos diferentes o trilho
+    // andava a diferença a mais e o último cartão saía pela esquerda.
     let curso = 1;
     const medir = () => {
       const cs = getComputedStyle(box);
@@ -1051,13 +1050,13 @@ function initMotion() {
 
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: box, start: 'top 8%',
+        trigger: sec, start: 'top top',
         end: () => '+=' + curso,
-        // No dedo o scrub tem de ser seco. Com 0.8 o trilho ficava
-        // quase um segundo atrás do gesto, e como o iOS tem inércia o
-        // dedo já tinha parado enquanto os cartões seguiam andando —
-        // é isso que se lê como travado. anticipatePin sai junto: ele
-        // adianta a prisão e no toque isso aparece como um salto.
+        // No dedo o scrub tem de ser seco. Com 0.8 o trilho ficava quase
+        // um segundo atrás do gesto e, como o iOS tem inércia, o dedo já
+        // tinha parado enquanto os cartões seguiam andando — é isso que
+        // se lê como travado. anticipatePin sai junto: ele adianta a
+        // prisão e no toque isso aparece como um salto.
         pin: true, scrub: true, invalidateOnRefresh: true,
         onRefreshInit: medir,
       },

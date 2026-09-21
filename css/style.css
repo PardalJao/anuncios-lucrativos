@@ -1417,6 +1417,9 @@ main{background:var(--paper)}
 }
 @media(max-width:1024px){
   html{scroll-padding-top:92px}
+  /* a dobra inteira é o que fica preso agora: cada pixel de respiro
+     aqui é um pixel a menos de cartão em cena */
+  .entregaveis{padding-block:24px}
   /* 64 embaixo mais 64 em cima davam 127px de nada entre o cartão do
      fecho e a oferta — numa tela de 812 isso é um sexto do campo */
   #sobre{padding-bottom:30px}
@@ -1463,7 +1466,7 @@ main{background:var(--paper)}
      reto contra o branco. */
   .trilho{width:calc(100vw - var(--sbw,0px));max-width:none;
     margin-inline:calc(50% - 50vw + var(--sbw,0px) / 2);
-    padding-inline:20px;
+    padding-block:6px 14px;padding-inline:20px;
     -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
     mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
   /* o trilho sangra até a borda da tela, mas o primeiro cartão tem de
@@ -1513,6 +1516,14 @@ main{background:var(--paper)}
 @media(max-width:560px){
   .wrap{width:calc(100% - 40px)}
   .sec{padding-block:64px}
+  /* depois do `.sec` de propósito: as duas regras têm a mesma
+     especificidade e é a ordem que decide. A dobra dos entregáveis é o
+     que fica preso no telefone, então cada pixel de respiro aqui é um
+     pixel a menos de cartão em cena. */
+  .entregaveis{padding-block:18px}
+  /* presa, a dobra tem de caber de cima a baixo: num iPhone de 844 o
+     rodapé do cartão ficava 9px fora da tela */
+  .trilho__track .card{padding:22px}
   .provas{grid-template-columns:1fr}
   .manifesto__cols{grid-template-columns:1fr;gap:34px}
   /* os nomes da faixa ficavam do tamanho de um título */
