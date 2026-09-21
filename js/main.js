@@ -1053,7 +1053,12 @@ function initMotion() {
       scrollTrigger: {
         trigger: box, start: 'top 8%',
         end: () => '+=' + curso,
-        pin: true, scrub: 0.8, anticipatePin: 1, invalidateOnRefresh: true,
+        // No dedo o scrub tem de ser seco. Com 0.8 o trilho ficava
+        // quase um segundo atrás do gesto, e como o iOS tem inércia o
+        // dedo já tinha parado enquanto os cartões seguiam andando —
+        // é isso que se lê como travado. anticipatePin sai junto: ele
+        // adianta a prisão e no toque isso aparece como um salto.
+        pin: true, scrub: true, invalidateOnRefresh: true,
         onRefreshInit: medir,
       },
     });

@@ -1203,7 +1203,9 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
      mais em cima e embaixo. Empilhado ele fica na mesma medida do
      quadro da hero — fino e na proporção do arquivo, em vez dos 335
      de largura que decepavam a cena. */
-  .sobre__foto{aspect-ratio:.63;width:min(100%,300px);margin-inline:auto}
+  /* alinhado à esquerda, na mesma margem do eyebrow e do título que
+     vêm logo abaixo — centrado, ele criava um segundo eixo na coluna */
+  .sobre__foto{aspect-ratio:.63;width:min(100%,300px);margin-inline:0 auto}
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1398,7 +1400,11 @@ main{background:var(--paper)}
 @media(max-width:1024px){
   /* tudo da dobra na largura do vídeo: com o quadro em 300 e o cartão
      em 335 os dois ficavam desencontrados na mesma coluna */
-  .showcase{grid-template-columns:1fr}
+  /* a casca escura media a coluna inteira enquanto os filhos paravam
+     em 300: sobrava moldura dos dois lados e a proporção quebrava.
+     320 = os 300 do conteúdo mais os 10 de padding de cada lado, então
+     ela passa a abraçar exatamente o que tem dentro. */
+  .showcase{grid-template-columns:1fr;width:min(100%,320px);margin-inline:auto}
   .showcase > *{width:min(100%,300px);margin-inline:auto}
   .author{aspect-ratio:.63}
   /* empilhado, a frase alinhada à esquerda com a faixa embaixo
