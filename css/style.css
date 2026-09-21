@@ -589,7 +589,10 @@ html:not(.js) .hero__title{opacity:1}
   font-size:clamp(19px,1.9vw,25px);line-height:1.45;color:var(--muted);
   letter-spacing:-.015em;max-width:34ch;
 }
-.agita__text .w--sm + .w--sm{margin-top:.5em}
+/* É uma frase só, quebrada em dois blocos para o reveal entrar em duas
+   etapas. O respiro de parágrafo entre eles fazia parecer duas frases
+   soltas: sem ele o entrelinhamento é o mesmo do começo ao fim. */
+.agita__text .w--sm + .w--sm{margin-top:0}
 /* a saída atravessa a largura inteira: presa na coluna da esquerda ela
    deixava metade da dobra vazia à direita */
 .agita__saida{
