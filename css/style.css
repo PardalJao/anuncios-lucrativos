@@ -1127,8 +1127,12 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 /* ═══════════════════════════════════════════════════════════════
    SOBRE + MANIFESTO
    ═══════════════════════════════════════════════════════════════ */
-.sobre__grid{display:grid;grid-template-columns:1fr 1.05fr;gap:72px;align-items:center}
-.sobre__foto{position:relative;overflow:hidden;border-radius:14px;background:var(--ink);align-self:stretch;min-height:540px}
+/* a coluna da foto cedeu largura para o texto: a altura do quadro sai
+   da proporção, não de um mínimo em px, então encolher a coluna é o
+   que baixa a altura — mesma troca feita no retrato da hero */
+.sobre__grid{display:grid;grid-template-columns:.78fr 1.22fr;gap:72px;align-items:center}
+.sobre__foto{position:relative;overflow:hidden;border-radius:14px;background:var(--ink);
+  aspect-ratio:.78;min-height:0}
 .sobre__foto img,.sobre__foto video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%}
 .sobre__foto video{opacity:0;transition:opacity .7s var(--e-out)}
 .sobre__foto video.is-ready{opacity:1}
@@ -1164,7 +1168,7 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .fecho__lado p{color:var(--muted);font-size:15px;line-height:1.8}
 .fecho__lado .btn{margin-top:24px}
 @media(max-width:860px){.fecho{grid-template-columns:1fr;gap:24px}}
-@media(max-width:960px){.sobre__grid{grid-template-columns:1fr;gap:34px}.sobre__foto{min-height:440px}.manifesto__cols{columns:1}}
+@media(max-width:960px){.sobre__grid{grid-template-columns:1fr;gap:34px}.sobre__foto{aspect-ratio:.8}.manifesto__cols{columns:1}}
 
 /* ═══════════════════════════════════════════════════════════════
    OFERTA + GARANTIA
