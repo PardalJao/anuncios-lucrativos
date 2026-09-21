@@ -256,7 +256,6 @@ function initPreloader(onDone) {
   const pctEl = el.querySelector('[data-pre-pct]');
   const barEl = el.querySelector('[data-pre-bar]');
   const wordEl = el.querySelector('[data-pre-word]');
-  const marca = el.querySelector('[data-pre-mark]');
 
   const START = performance.now();
   const MIN_MS = 1500;
@@ -301,38 +300,13 @@ function initPreloader(onDone) {
     const shown = Math.round(pct);
     pctEl.textContent = shown + '%';
     barEl.style.width = shown + '%';
-    // o cifrão enche na mesma medida do número, de baixo para cima
-    if (marca) marca.style.setProperty('--nivel', shown + '%');
 
     if (pct >= 100) {
       finished = true;
       clearInterval(cycle);
-      // o cifrão está cheio: o nome abre ao lado e fecha o lockup.
-      // A página só se revela depois que a logo terminou de se formar.
-      // Quanto o conjunto precisa deslizar para que o lockup inteiro,
-      // e não só o cifrão, fique no centro. Medido agora porque depende
-      // da largura real do nome depois do clamp e das fontes; o recuo
-      // de escala entra na conta porque encolhe em torno do cifrão.
-      const REDUZ = 0.8;
-      const nome = el.querySelector('.marca__nome');
-      if (marca && nome) {
-        // Por offset, não por getBoundingClientRect: o nome parte com um
-        // translateX de entrada, e o rect já traria esse deslocamento
-        // embutido, jogando o centro alguns pixels para o lado.
-        const recuo = parseFloat(getComputedStyle(nome).marginLeft) || 0;
-        const cresce = nome.offsetWidth + recuo;   // o que o nome soma à direita
-        // Enquanto carrega, quem está centrado é o par marca+palavra, então
-        // a marca fica acima do meio por metade do bloco da palavra mais o
-        // vão. Sumindo a palavra, ela desce essa mesma medida.
-        const vao = parseFloat(getComputedStyle(el).rowGap) || 0;
-        const desceY = (vao + wordEl.offsetHeight) / 2;
-        marca.style.setProperty('--reduz', REDUZ);
-        marca.style.setProperty('--desloca',
-          (-(cresce / 2) * REDUZ).toFixed(1) + 'px');
-        marca.style.setProperty('--desce', desceY.toFixed(1) + 'px');
-      }
-      el.classList.add('is-completo');
-      setTimeout(exit, reduced ? 0 : 1500);
+      // um respiro curto só para a última palavra ser lida inteira,
+      // e a página entra
+      setTimeout(exit, reduced ? 0 : 260);
       return;
     }
     requestAnimationFrame(tick);
