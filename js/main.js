@@ -810,6 +810,26 @@ function initOrbita() {
 
     return () => gsap.set(itens, { clearProps: 'transform,opacity' });
   });
+
+  // No telefone não há anel: a coluna corre e cada registro entra pelo
+  // lado em que estaria na órbita, alternando. É a mesma ideia de
+  // "vem de fora do quadro", contada no formato que a tela permite.
+  gsap.matchMedia().add('(max-width: 900px)', () => {
+    const itens = gsap.utils.toArray('.orb__item', orb)
+      .filter((el) => getComputedStyle(el).display !== 'none');
+    if (!itens.length) return;
+
+    const tweens = itens.map((el, i) => gsap.from(el, {
+      x: () => (i % 2 ? 1 : -1) * Math.min(150, window.innerWidth * 0.38),
+      rotation: i % 2 ? 4 : -4,
+      opacity: 0,
+      ease: 'power3.out',
+      duration: 0.9,
+      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+    }));
+
+    return () => tweens.forEach((t) => { t.scrollTrigger?.kill(); t.kill(); });
+  });
 }
 
 /* ───────────────────────────────────────────────────────────
@@ -1033,6 +1053,108 @@ function initMotion() {
 }
 
 /* ───────────────────────────────────────────────────────────
+   10b. GALERIA DOS REGISTROS
+   Os links das peças continuam apontando para o arquivo: sem JS
+   ainda abrem em outra aba. Com JS viram uma galeria que anda para
+   os lados sem tirar a pessoa da página.
+   ─────────────────────────────────────────────────────────── */
+function initGaleria() {
+  const cx = document.querySelector('[data-galeria]');
+  const palco = cx && cx.querySelector('[data-galeria-img]');
+  const conta = cx && cx.querySelector('[data-galeria-conta]');
+  const pecas = [...document.querySelectorAll('.orb__item')];
+  if (!cx || !palco || !pecas.length) return;
+
+  let atual = -1;
+  let quemAbriu = null;
+
+  // guardar a posição antes de travar o scroll: `overflow:hidden` no
+  // html zera o scroll de algumas engines, e a pessoa voltaria da
+  // galeria para o topo da página
+  let posicao = 0;
+
+  const fonte = (el) => el.getAttribute('href');
+  const legenda = (el) => {
+    const img = el.querySelector('img');
+    return (img && img.getAttribute('alt')) || '';
+  };
+
+  // o vizinho já vem no ar: passar de um para o outro não pode piscar
+  const adiantar = (i) => {
+    const alvo = pecas[(i + pecas.length) % pecas.length];
+    if (alvo) new Image().src = fonte(alvo);
+  };
+
+  const mostrar = (i) => {
+    atual = (i + pecas.length) % pecas.length;
+    const peca = pecas[atual];
+    cx.classList.remove('is-pronta');
+    palco.src = fonte(peca);
+    palco.alt = legenda(peca);
+    if (conta) conta.textContent = (atual + 1) + ' / ' + pecas.length;
+    const pronto = () => cx.classList.add('is-pronta');
+    if (palco.complete) pronto(); else palco.addEventListener('load', pronto, { once: true });
+    adiantar(atual + 1);
+    adiantar(atual - 1);
+  };
+
+  const abrir = (i, origem) => {
+    quemAbriu = origem || null;
+    posicao = window.scrollY;
+    cx.hidden = false;
+    // um quadro entre sair do `hidden` e ganhar a classe, senão a
+    // transição de opacidade não tem de onde partir
+    requestAnimationFrame(() => cx.classList.add('is-aberta'));
+    document.documentElement.classList.add('tem-galeria');
+    document.documentElement.style.top = (-posicao) + 'px';
+    mostrar(i);
+    const fechar = cx.querySelector('[data-galeria-fechar]:not([tabindex])');
+    if (fechar) fechar.focus({ preventScroll: true });
+  };
+
+  const fechar = () => {
+    cx.classList.remove('is-aberta', 'is-pronta');
+    document.documentElement.classList.remove('tem-galeria');
+    document.documentElement.style.top = '';
+    window.scrollTo(0, posicao);
+    const esconder = () => { cx.hidden = true; palco.removeAttribute('src'); };
+    setTimeout(esconder, reduced ? 0 : 320);
+    if (quemAbriu) quemAbriu.focus({ preventScroll: true });
+    atual = -1;
+  };
+
+  pecas.forEach((peca, i) => {
+    peca.addEventListener('click', (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button > 0) return;
+      e.preventDefault();
+      abrir(i, peca);
+    });
+  });
+
+  cx.querySelectorAll('[data-galeria-fechar]').forEach(
+    (b) => b.addEventListener('click', fechar));
+  cx.querySelectorAll('[data-galeria-passo]').forEach(
+    (b) => b.addEventListener('click', () => mostrar(atual + Number(b.dataset.galeriaPasso))));
+
+  document.addEventListener('keydown', (e) => {
+    if (cx.hidden) return;
+    if (e.key === 'Escape') fechar();
+    else if (e.key === 'ArrowRight') mostrar(atual + 1);
+    else if (e.key === 'ArrowLeft') mostrar(atual - 1);
+  });
+
+  // arrastar para o lado no telefone
+  let x0 = null;
+  cx.addEventListener('touchstart', (e) => { x0 = e.changedTouches[0].clientX; }, { passive: true });
+  cx.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const d = e.changedTouches[0].clientX - x0;
+    x0 = null;
+    if (Math.abs(d) > 45) mostrar(atual + (d < 0 ? 1 : -1));
+  }, { passive: true });
+}
+
+/* ───────────────────────────────────────────────────────────
    11. BARRA FIXA
    ─────────────────────────────────────────────────────────── */
 function initStickyBar() {
@@ -1101,6 +1223,7 @@ initHeaderScroll();
 initHeroVideo();
 initVideosApoio();
 initStickyBar();
+initGaleria();
 initFaq();
 initRollingText();   // depois do applyConfig, que é quem escreve os rótulos
 

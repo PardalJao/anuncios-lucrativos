@@ -877,7 +877,15 @@ html:not(.js) .hero__title{opacity:1}
    conforme o scroll avança. Cada peça tem posição e deslocamento próprios;
    o JS só anima a entrada, a posição é toda do CSS. */
 /* pinada: a dobra inteira tem de caber em 100vh, senão o topo some */
-.orb{position:relative;min-height:min(64vh,600px);display:grid;place-items:center}
+/* a órbita não se prende à medida de leitura do `.wrap`: nesta dobra
+   o que importa é a moldura da tela, e sobrava margem de sobra dos
+   dois lados. Sai da coluna e ocupa a largura da viewport menos uma
+   goteira — a seção tem overflow:hidden, então nada escapa. */
+.orb{
+  position:relative;left:50%;transform:translateX(-50%);
+  width:min(1320px,calc(100vw - var(--sbw,0px) - 72px));
+  min-height:min(78vh,760px);display:grid;place-items:center;
+}
 /* presa na tela, a dobra ocupa a viewport inteira: sobrando altura
    apareceria a seção seguinte por baixo do pin */
 .orbita{padding-block:clamp(40px,5vh,64px);min-height:100vh;
@@ -889,71 +897,175 @@ html:not(.js) .hero__title{opacity:1}
   position:relative;z-index:2;text-align:center;
   /* largura em px, não em ch: o `ch` resolve pelo corpo de 16px do
      contêiner e estrangula um título de 40px a uma palavra por linha */
-  width:min(440px,46%);
+  width:min(680px,50%);
   padding:26px 8px;background:var(--white);border-radius:var(--radius);
 }
-.orb__centro .sec__title{font-size:clamp(26px,2.9vw,38px)}
+.orb__centro .sec__title{font-size:clamp(28px,3.7vw,54px);line-height:1.08}
 .orb__centro .eyebrow{margin-bottom:16px}
-.orb__intro{color:var(--muted);font-size:14px;line-height:1.75;margin-top:16px}
+/* medida curta de propósito: na largura do bloco inteiro a frase
+   virava uma linha só, esticada de ponta a ponta */
+.orb__intro{
+  color:var(--muted);font-size:15px;line-height:1.7;margin:18px auto 0;
+  max-width:30ch;
+}
 
 /* Sem moldura: os registros foram recortados no próprio limite, então
    cada um traz a proporção que tinha na origem. Borda e fundo bege só
    serviam para disfarçar o corte 4:5 que era forçado antes. */
 .orb__item{
   position:absolute;z-index:1;display:block;overflow:hidden;
-  width:max-content;border-radius:10px;
-  box-shadow:0 10px 26px rgba(17,17,17,.1);
+  width:max-content;border-radius:10px;cursor:zoom-in;
+  /* o fio interno fecha a borda do recorte: sem ele o pixel da ponta
+     do print encosta direto no fundo claro e a quina parece falhada */
+  box-shadow:inset 0 0 0 1px rgba(17,17,17,.07),0 10px 26px rgba(17,17,17,.1);
   transition:box-shadow .4s ease;
   /* transform pertence ao GSAP daqui em diante — ver initOrbita() */
 }
 /* a caixa limita, a imagem decide: um print de celular inteiro (0,47)
    bate no teto de altura e um recorte largo (3,25) bate no de largura,
    mas nenhum dos dois é esticado */
+.orb__item picture{display:block}
 .orb__item img{
   display:block;width:auto;height:auto;
-  max-width:clamp(78px,8vw,112px);
-  max-height:clamp(96px,11.5vw,150px);
+  /* o teto de altura é o que decide quantas peças cabem numa coluna:
+     quatro prints de celular a 200px ocupam a órbita inteira sem se
+     empilhar. A largura pode crescer mais porque as peças largas são
+     justamente as baixas. */
+  max-width:clamp(92px,11.4vw,182px);
+  max-height:clamp(108px,13.2vw,200px);
   transition:transform .4s var(--e-out);
 }
 /* o hover escala a imagem, não o link: escalar o link brigaria com a
    tween de posição que o GSAP mantém no mesmo transform */
-.orb__item:hover{box-shadow:0 18px 36px rgba(17,17,17,.18);z-index:3}
+.orb__item:hover{box-shadow:inset 0 0 0 1px rgba(17,17,17,.07),0 18px 36px rgba(17,17,17,.18);z-index:3}
 /* recorte muito largo vira tirinha no teto padrão: ganha mais largura
    para que a mensagem continue legível */
-.orb__item--largo img{max-width:clamp(120px,12vw,168px)}
+.orb__item--largo img{max-width:clamp(146px,17.5vw,268px)}
 .orb__item:hover img{transform:scale(1.06)}
 
+/* As colunas laterais recebem os prints de celular, que são altos; o
+   topo e a base ficam com os recortes baixos, que é o que cabe entre
+   a borda da dobra e o bloco de texto. O escalonamento horizontal é o
+   que impede a coluna de virar uma pilha alinhada. */
 /* esquerda */
-.orb--el1{left:0;top:4%;transform:rotate(-7deg)}
-.orb--el2{left:6%;top:30%;transform:rotate(5deg)}
-.orb--el3{left:0;top:56%;transform:rotate(-4deg)}
-.orb--el4{left:9%;bottom:2%;transform:rotate(8deg)}
+.orb--el1{left:0;top:0;transform:rotate(-7deg)}
+.orb--el2{left:5%;top:25%;transform:rotate(5deg)}
+.orb--el3{left:0;top:50%;transform:rotate(-4deg)}
+.orb--el4{left:6%;top:74%;transform:rotate(8deg)}
 /* direita */
-.orb--er1{right:0;top:6%;transform:rotate(6deg)}
-.orb--er2{right:7%;top:32%;transform:rotate(-5deg)}
-.orb--er3{right:0;top:58%;transform:rotate(4deg)}
-.orb--er4{right:8%;bottom:1%;transform:rotate(-8deg)}
-/* topo e base, mais estreitas para não brigar com o texto */
-.orb--et1{left:26%;top:-2%;transform:rotate(4deg)}
-.orb--et2{right:26%;top:-1%;transform:rotate(-6deg)}
-.orb--eb1{left:30%;bottom:-3%;transform:rotate(-5deg)}
-.orb--eb2{right:30%;bottom:-2%;transform:rotate(7deg)}
+.orb--er1{right:0;top:1%;transform:rotate(6deg)}
+.orb--er2{right:6%;top:27%;transform:rotate(-5deg)}
+.orb--er3{right:0;top:50%;transform:rotate(4deg)}
+.orb--er4{right:5%;top:74%;transform:rotate(-8deg)}
+/* topo e base, acima e abaixo do texto */
+.orb--et1{left:25%;top:-4%;transform:rotate(4deg)}
+.orb--et2{right:25%;top:-3%;transform:rotate(-6deg)}
+.orb--eb1{left:29%;bottom:-4%;transform:rotate(-5deg)}
+.orb--eb2{right:29%;bottom:-3%;transform:rotate(7deg)}
+
+/* com a galeria aberta a página para de rolar por trás. `position:
+   fixed` no html (e não `overflow:hidden`) porque o rodapé revelado
+   já é fixo: só esconder o overflow deixava o scroll atravessar. */
+html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
+
+/* ── Galeria dos registros ─────────────────────────────────────
+   Camada única por cima de tudo. O palco é o único elemento que
+   muda de conteúdo: trocar `src` e deixar a transição no contêiner
+   evita o pisca-branco de recriar o <img> a cada passo. */
+.galeria{
+  position:fixed;inset:0;z-index:200;
+  display:grid;place-items:center;
+  padding:clamp(16px,4vw,48px);
+  opacity:0;pointer-events:none;
+  transition:opacity .32s ease;
+}
+.galeria[hidden]{display:none}
+.galeria.is-aberta{opacity:1;pointer-events:auto}
+.galeria__fundo{
+  position:absolute;inset:0;border:0;padding:0;cursor:zoom-out;
+  background:rgba(17,15,12,.88);backdrop-filter:blur(6px);
+}
+.galeria__palco{
+  position:relative;margin:0;display:grid;place-items:center;
+  max-width:min(100%,980px);max-height:100%;
+}
+.galeria__palco img{
+  display:block;max-width:100%;max-height:min(84vh,900px);
+  width:auto;height:auto;border-radius:12px;
+  box-shadow:0 30px 80px rgba(0,0,0,.5);
+  transform:scale(.97);opacity:0;
+  transition:transform .4s var(--e-out),opacity .3s ease;
+}
+.galeria.is-pronta .galeria__palco img{transform:none;opacity:1}
+.galeria__btn{
+  position:absolute;z-index:2;display:grid;place-items:center;
+  width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.22);
+  background:rgba(20,18,15,.55);color:#f7f4ee;cursor:pointer;
+  transition:background .25s ease,border-color .25s ease,transform .25s var(--e-out);
+}
+.galeria__btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.galeria__btn:hover{background:rgba(40,36,30,.85);border-color:rgba(255,255,255,.4)}
+.galeria__btn:active{transform:scale(.94)}
+.galeria__btn--fechar{top:clamp(12px,3vw,26px);right:clamp(12px,3vw,26px)}
+.galeria__btn--ant{left:clamp(10px,2.4vw,26px);top:50%;margin-top:-24px}
+.galeria__btn--prox{right:clamp(10px,2.4vw,26px);top:50%;margin-top:-24px}
+.galeria__conta{
+  position:absolute;left:0;right:0;bottom:clamp(12px,3vw,26px);
+  text-align:center;color:rgba(247,244,238,.72);
+  font:500 12px/1 var(--sans);letter-spacing:.14em;
+}
+/* no telefone as setas ficariam sobre a imagem: descem para a base,
+   lado a lado com o contador */
+@media(max-width:620px){
+  .galeria__btn--ant,.galeria__btn--prox{top:auto;bottom:calc(clamp(12px,3vw,26px) + 26px);margin-top:0;width:44px;height:44px}
+  .galeria__btn--ant{left:22%}
+  .galeria__btn--prox{right:22%}
+  .galeria__palco img{max-height:72vh}
+}
+@media(prefers-reduced-motion:reduce){
+  .galeria,.galeria__palco img{transition:none}
+}
 
 .provas__foot{display:flex;align-items:center;justify-content:center;gap:30px;margin-top:34px;flex-wrap:wrap}
-.provas__foot p{font-size:11px;line-height:1.6;color:var(--muted);max-width:460px;text-align:center}
+.provas__foot p{font-size:11px;line-height:1.7;color:var(--muted);max-width:300px;text-align:center}
 
+/* No telefone a órbita não tem margem lateral para existir, mas a
+   ideia continua: os registros chegam de fora, alternando os lados, e
+   o texto fica no meio deles. Uma coluna só — em duas, cada print de
+   celular ficaria com metade de 335px e não daria para ler nada. */
 @media(max-width:900px){
-  .orbita{min-height:0;display:block}
-  /* em tela estreita não há margem lateral para orbitar: vira grade */
-  .orb{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;min-height:0}
-  /* no HTML o texto vem depois das peças (a órbita não tem ordem de
-     leitura); na grade a ordem do DOM volta a valer, daí o order */
-  .orb__centro{grid-column:1 / -1;order:-1;width:auto;margin-bottom:10px;padding:0 0 4px}
-  .orb__item{position:static;width:auto;transform:none!important}
-  /* na grade a célula manda: o teto de 8vw da órbita deixaria a
-     imagem pequena no meio de uma coluna bem mais larga */
-  .orb__item img{max-width:100%;width:100%;max-height:240px;object-fit:contain}
-  .orb--et1,.orb--et2,.orb--eb1,.orb--eb2{display:none}
+  .orbita{min-height:0;display:block;padding-block:clamp(48px,8vw,72px)}
+  .orb{
+    left:auto;transform:none;width:auto;min-height:0;
+    display:flex;flex-direction:column;align-items:center;
+    gap:clamp(22px,6vw,34px);
+  }
+  .orb__centro{
+    order:4;width:auto;max-width:36ch;margin-block:6px;padding:0 0 4px;
+    background:none;
+  }
+  .orb__centro .sec__title{font-size:clamp(28px,7.4vw,40px)}
+  .orb__intro{max-width:32ch}
+  .orb__item{position:static;width:auto;max-width:100%;transform:none}
+  /* a imagem manda na caixa: a alta para na altura da tela e a larga
+     ocupa a coluna inteira, cada uma na proporção que tem */
+  .orb__item img{
+    width:auto;height:auto;
+    max-width:100%;max-height:min(62vh,540px);
+  }
+  /* a ordem do DOM é a da órbita, não a de leitura: aqui ela é
+     reescrita para o texto cair no meio da sequência */
+  .orb--et1{order:1}
+  .orb--el1{order:2}
+  .orb--et2{order:3}
+  .orb--eb1{order:5}
+  .orb--el2{order:6}
+  .orb--er2{order:7}
+  .orb--er1{order:8}
+  .orb--eb2{order:9}
+  /* oito bastam para provar: em coluna única as doze viravam uma
+     rolagem que ninguém termina */
+  .orb--el3,.orb--el4,.orb--er3,.orb--er4{display:none}
 }
 
 /* ═══════════════════════════════════════════════════════════════
