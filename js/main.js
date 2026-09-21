@@ -813,7 +813,9 @@ function initOrbita() {
     if (!itens.length) return;
 
     const tweens = itens.map((el, i) => gsap.from(el, {
-      x: () => (i % 2 ? 1 : -1) * Math.min(150, window.innerWidth * 0.38),
+      // em duas colunas o deslocamento encolhe: 38% da tela jogavam a
+      // peça da direita para fora antes de ela entrar
+      x: () => (i % 2 ? 1 : -1) * Math.min(90, window.innerWidth * 0.2),
       rotation: i % 2 ? 4 : -4,
       opacity: 0,
       ease: 'power3.out',
@@ -1031,9 +1033,9 @@ function initMotion() {
         - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
       return Math.max(0, track.scrollWidth - visivel);
     };
-    // pausa curta no fim: o último cartão precisa de um instante em
-    // cena antes de a página voltar a rolar
-    const SEGURA = () => window.innerHeight * 0.3;
+    // só o respiro de um toque: 30% da tela viravam um trecho de rolagem
+    // em que nada acontecia, com o trilho já no fim e a página presa
+    const SEGURA = () => window.innerHeight * 0.06;
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -1241,6 +1243,7 @@ function initStickyBar() {
   const bar = document.querySelector('[data-sticky]');
   const oferta = document.querySelector('#oferta');
   const hero = document.querySelector('.hero');
+  const rodape = document.querySelector('.footer');
   if (!bar) return;
 
   bar.hidden = false;
@@ -1251,10 +1254,11 @@ function initStickyBar() {
   // já é o convite, e o cabeçalho volta sem CTA para não repetir.
   let naHero = !!hero;
   let naOferta = false;
+  let noFim = false;
   let descendo = false;
 
   const sync = () => bar.classList.toggle(
-    'is-on', descendo && !naHero && !naOferta);
+    'is-on', descendo && !naHero && !naOferta && !noFim);
 
   // a dobra inteira, não só o botão dela: agora que o cabeçalho some
   // sozinho no fim da hero, olhar apenas o botão deixava a barra entrar
@@ -1268,6 +1272,13 @@ function initStickyBar() {
   if (oferta) {
     new IntersectionObserver(([e]) => { naOferta = e.isIntersecting; sync(); },
       { threshold: 0 }).observe(oferta);
+  }
+
+  // o rodapé tem o seu próprio CTA: sem isto a barra voltava em cima
+  // dele e a última dobra terminava com dois botões iguais
+  if (rodape) {
+    new IntersectionObserver(([e]) => { noFim = e.isIntersecting; sync(); },
+      { rootMargin: '0px 0px 140px 0px' }).observe(rodape);
   }
 
   document.addEventListener('cabecalho:escondido', (e) => {
