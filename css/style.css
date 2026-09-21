@@ -18,6 +18,11 @@
   --green:#7d6534;
   --deep:#111111;
   --champagne:#b08d57;
+  /* verde de conversão: o preto do botão se confundia com o texto da
+     página. Este tom passa AA com texto branco (5,02:1) e ainda separa
+     do papel (4,57:1) — um verde mais vivo falharia no texto. */
+  --cta:#15803d;
+  --cta-escuro:#116430;
   --mint:#efe7d7;
   --line:#e3ddd1;
   --shell:#eae4d8;
@@ -145,13 +150,13 @@ h1,h2,h3,h4,h5,h6,
    ═══════════════════════════════════════════════════════════════ */
 .btn{
   position:relative;display:inline-flex;align-items:center;justify-content:center;gap:20px;
-  min-height:52px;padding:13px 24px;border:1px solid var(--ink);border-radius:8px;
-  background:var(--ink);color:var(--white);text-decoration:none;
+  min-height:52px;padding:13px 24px;border:1px solid var(--cta);border-radius:8px;
+  background:var(--cta);color:var(--white);text-decoration:none;
   font:500 14px/1.4 var(--sans);white-space:nowrap;
   transition:background .2s ease,border-color .2s ease,transform .25s var(--e-out),box-shadow .25s ease;
 }
 .btn__icon{font-size:20px;line-height:1;transition:transform .25s var(--e-out)}
-.btn:hover{background:#000;border-color:var(--champagne);box-shadow:0 6px 18px rgba(17,17,17,.1);transform:translateY(-2px)}
+.btn:hover{background:var(--cta-escuro);border-color:var(--champagne);box-shadow:0 8px 20px rgba(21,128,61,.24);transform:translateY(-2px)}
 .btn:hover .btn__icon{transform:translate(2px,-2px)}
 .btn:active{transform:translateY(0);opacity:.9}
 .btn--ghost{background:transparent;color:var(--ink);border-color:#ddd6c8}
@@ -301,15 +306,15 @@ html.is-loading .preloader{
   position:relative;position:fixed;right:26px;bottom:26px;z-index:55;
   display:none;align-items:center;gap:18px;
   padding:16px 18px 16px 28px;border-radius:999px;
-  background:linear-gradient(145deg,#1b1916,#000 58%);
+  background:linear-gradient(145deg,var(--cta),#0d5a2b 58%);
   color:var(--white);text-decoration:none;overflow:hidden;isolation:isolate;
-  box-shadow:0 16px 38px rgba(17,17,17,.34),inset 0 1px 0 rgba(255,255,255,.14);
+  box-shadow:0 16px 38px rgba(13,90,43,.34),inset 0 1px 0 rgba(255,255,255,.14);
   font:500 14px/1.3 var(--sans);white-space:nowrap;
   opacity:0;transform:translateY(16px) scale(.94);pointer-events:none;
   transition:opacity .38s var(--e-out),transform .38s var(--e-out),box-shadow .3s ease;
 }
 .fab.is-on{opacity:1;transform:none;pointer-events:auto}
-.fab:hover{box-shadow:0 20px 46px rgba(17,17,17,.44),inset 0 1px 0 rgba(255,255,255,.2)}
+.fab:hover{box-shadow:0 20px 46px rgba(13,90,43,.44),inset 0 1px 0 rgba(255,255,255,.2)}
 /* reflexo varrendo — só enquanto o botão está em cena */
 .fab::before{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
@@ -1180,13 +1185,10 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   line-height:1.08;letter-spacing:-.05em;color:#f6f1e6;
 }
 .fecho__lado p{color:#c2b9a8;font-size:15px;line-height:1.8}
-/* o botão da casa é escuro: dentro do cartão preto ele sumiria */
-.fecho__lado .btn{
-  margin-top:24px;background:var(--paper);color:var(--ink);border-color:var(--paper);
-}
-.fecho__lado .btn:hover{
-  background:#fff;border-color:var(--champagne);box-shadow:0 10px 26px rgba(0,0,0,.4);
-}
+/* o CTA tem uma cor só no site inteiro; sobre o preto o verde separa
+   em 3,76:1, acima do 3:1 que um componente precisa */
+.fecho__lado .btn{margin-top:24px}
+.fecho__lado .btn:hover{box-shadow:0 10px 26px rgba(21,128,61,.34)}
 @media(max-width:1024px){.fecho{grid-template-columns:1fr;gap:24px}}
 @media(max-width:1024px){
   .sobre__grid{grid-template-columns:1fr;gap:34px}
