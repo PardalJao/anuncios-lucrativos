@@ -502,9 +502,24 @@ function initHeaderScroll() {
     if (document.fonts) document.fonts.ready.then(medirCentroDaMarca);
   }
 
-  const TOPO = 6;        // tolerância para "está no topo"
-  const SOLTA = 90;      // a partir daqui pode esconder
+  const SOLTA = 90;      // piso, caso a hero não exista
   const RUIDO = 6;       // ignora tremidas de trackpad
+
+  // A hero é a única dobra onde o cabeçalho nunca desgruda: soltar a
+  // pílula no primeiro toque de scroll fazia um salto que sumia logo em
+  // seguida. Só depois que a hero sai de cena o cabeçalho vira pílula e
+  // passa a obedecer à direção do scroll. Medido, não fixo, porque a
+  // hero é dimensionada em vh e muda com a barra do navegador móvel.
+  const hero = document.querySelector('.hero');
+  let limiar = SOLTA;
+  const medirHero = () => {
+    if (!hero) return;
+    const r = hero.getBoundingClientRect();
+    limiar = Math.max(SOLTA, Math.round(r.top + window.scrollY + r.height));
+  };
+  medirHero();
+  window.addEventListener('resize', medirHero);
+  if (document.fonts) document.fonts.ready.then(medirHero);
 
   let ultimo = window.scrollY;
   let escondido = false;
@@ -522,21 +537,21 @@ function initHeaderScroll() {
     const delta = y - ultimo;
     const menu = header.querySelector('.nav__pill.is-open');
 
-    if (y <= TOPO) {
-      // encostou no topo: volta a ser barra de largura total
+    if (y < limiar) {
+      // ainda na hero: barra de largura total, sempre em cena
       header.classList.remove('is-detached', 'is-hidden');
       if (escondido) { escondido = false; avisar(); }
-    } else {
-      header.classList.add('is-detached');
-
-      if (Math.abs(delta) > RUIDO && !menu) {
-        const descendo = delta > 0;
-        const novo = descendo && y > SOLTA;
-        if (novo !== escondido) {
-          escondido = novo;
-          header.classList.toggle('is-hidden', escondido);
-          avisar();
-        }
+    } else if (Math.abs(delta) > RUIDO && !menu) {
+      const novo = delta > 0;
+      if (novo !== escondido) {
+        escondido = novo;
+        // A pílula é o estado de volta, não o de saída: descendo o
+        // cabeçalho sobe com a forma que já tinha, e só ao voltar é que
+        // assume a largura reduzida. Trocar a forma no mesmo quadro em
+        // que ele sai de cena é que dava o salto de aparecer e sumir.
+        if (!escondido) header.classList.add('is-detached');
+        header.classList.toggle('is-hidden', escondido);
+        avisar();
       }
     }
 
