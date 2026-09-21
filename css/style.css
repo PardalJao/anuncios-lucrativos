@@ -1421,14 +1421,6 @@ main{background:var(--paper)}
 /* ═══════════════════════════════════════════════════════════════
    RESPONSIVO
    ═══════════════════════════════════════════════════════════════ */
-/* No tablet o layout é o do telefone — mas esticar o conteúdo de uma
-   coluna por 900px de largura deixa cada cartão com um oceano vazio
-   no meio. A medida para, o conteúdo centraliza, e o que muda do
-   telefone para o tablet é só a margem ao redor. As faixas que sangram
-   (trilho, órbita) continuam medindo pela viewport, não por aqui. */
-@media(min-width:561px) and (max-width:1024px){
-  .sec .wrap,.footer .wrap{width:min(600px,calc(100% - 64px))}
-}
 @media(max-width:1024px){
   .wrap{width:calc(100% - 64px)}
   .hero__title{font-size:58px}
@@ -1453,6 +1445,11 @@ main{background:var(--paper)}
 }
 @media(max-width:1024px){
   html{scroll-padding-top:92px}
+  /* empilhado, a marca à esquerda, a frase no meio e o botão à direita
+     viram três eixos diferentes na mesma coluna */
+  .footer__top{flex-direction:column;align-items:center;text-align:center;gap:20px}
+  .footer__top .btn{width:100%;max-width:320px}
+  .footer__bottom{flex-direction:column;align-items:center;text-align:center;gap:8px}
   /* numa coluna só, a quebra natural larga órfãs como "vez." e
      "receber" sozinhas na linha; balance distribui melhor */
   .sec__title,.oferta__title,.garantia__title,.manifesto__big,.agita__saida{text-wrap:balance}
@@ -1483,7 +1480,7 @@ main{background:var(--paper)}
      conteúdo, não um valor solto. Declarado aqui, depois do 20px,
      porque as duas regras têm a mesma especificidade. */
   @media(min-width:561px){
-    .trilho{padding-inline:calc((100vw - var(--sbw,0px) - min(600px,100vw - 64px)) / 2)}
+    .trilho{padding-inline:calc((100vw - var(--sbw,0px) - min(390px,100vw - 64px)) / 2)}
   }
   .trilho__track{gap:14px}
   .card{flex-basis:min(78vw,300px);padding:22px}
@@ -1499,6 +1496,29 @@ main{background:var(--paper)}
   .hero__lead{font-size:16px;max-width:335px}
   .hero__cta{flex-direction:column;align-items:stretch;max-width:335px;margin-inline:auto}
 }
+/* No tablet o layout é o do telefone — mas esticar o conteúdo de uma
+   coluna por 900px de largura deixa cada cartão com um oceano vazio
+   no meio. A medida para, o conteúdo centraliza, e o que muda do
+   telefone para o tablet é só a margem ao redor. As faixas que sangram
+   (trilho, órbita) continuam medindo pela viewport, não por aqui. */
+@media(min-width:561px) and (max-width:1024px){
+  /* `main` e não `.sec`: a hero não carrega a classe e ficava de fora,
+     com o painel do método 340px mais largo que o resto */
+  main .wrap,.footer .wrap{width:min(390px,calc(100% - 64px))}
+  /* com a medida fixa em 390px, corpo de texto em `vw` passa a medir
+     pela tela e não pela coluna: o título da hero chegava a 58px numa
+     coluna de 390 e era cortado. Aqui ele vale o que valeria num
+     telefone dessa largura. */
+  .hero__title{font-size:36px;line-height:1.14;letter-spacing:-.04em}
+  /* o nowrap das linhas do título é de desktop, onde a medida é larga.
+     Na coluna de 390 ele impede a quebra e a frase sai pela borda. */
+  .hero__title .line > span{white-space:normal}
+  .hero__lead{font-size:16px;max-width:none}
+  .hero__cta{flex-direction:column;align-items:stretch}
+  .agita__saida{font-size:34px}
+  .orb__centro .sec__title{font-size:30px}
+}
+
 @media(max-width:560px){
   .wrap{width:calc(100% - 40px)}
   .sec{padding-block:64px}
