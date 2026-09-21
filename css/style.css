@@ -152,7 +152,10 @@ h1,h2,h3,h4,h5,h6,
   position:relative;display:inline-flex;align-items:center;justify-content:center;gap:20px;
   min-height:52px;padding:13px 24px;border:1px solid var(--cta);border-radius:8px;
   background:var(--cta);color:var(--white);text-decoration:none;
-  font:500 14px/1.4 var(--sans);white-space:nowrap;
+  /* caixa alta com tracking largo: em corpo pequeno ela pesa mais que
+     a caixa baixa e puxa o olho antes do resto da dobra */
+  font:600 12.5px/1.4 var(--sans);letter-spacing:.09em;text-transform:uppercase;
+  white-space:nowrap;
   transition:background .2s ease,border-color .2s ease,transform .25s var(--e-out),box-shadow .25s ease;
 }
 .btn__icon{font-size:20px;line-height:1;transition:transform .25s var(--e-out)}
@@ -161,7 +164,7 @@ h1,h2,h3,h4,h5,h6,
 .btn:active{transform:translateY(0);opacity:.9}
 .btn--ghost{background:transparent;color:var(--ink);border-color:#ddd6c8}
 .btn--ghost:hover{background:#f1ece1;color:var(--ink);box-shadow:none}
-.btn--small{min-height:44px;padding:10px 18px;font-size:13px;gap:16px}
+.btn--small{min-height:44px;padding:10px 18px;font-size:11.5px;letter-spacing:.085em;gap:16px}
 .btn--block{width:100%}
 .btn[aria-disabled="true"],
 button.btn[disabled]{
@@ -1172,10 +1175,15 @@ html.tem-galeria{position:fixed;left:0;right:0;width:100%;overflow:hidden}
   50%{transform:rotate(180deg) scale(1.2)}
   100%{transform:rotate(360deg) scale(1.08)}
 }
+/* A aspa de abertura é um sinal, não uma letra: deixada no fluxo ela
+   empurrava a primeira linha para dentro e o bloco parecia torto. Sai
+   para fora da caixa, e aí as três linhas alinham pelo "C". */
 .fecho__q{
-  font-family:var(--serif);font-size:clamp(24px,3.1vw,40px);
-  line-height:1.08;letter-spacing:-.05em;
+  font-family:var(--serif);font-size:clamp(26px,3.3vw,42px);
+  line-height:1.07;letter-spacing:-.05em;
+  text-indent:-.42em;
 }
+.fecho__q em{font-style:italic;color:var(--green)}
 .fecho__lado p{color:var(--muted);font-size:15px;line-height:1.8}
 .fecho__lado .btn{margin-top:24px}
 @media(max-width:1024px){.fecho{grid-template-columns:1fr;gap:24px}}
