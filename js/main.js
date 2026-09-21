@@ -401,8 +401,37 @@ function initHeaderScroll() {
   // Cada zona entra e sai por conta própria: uma variável só faria a
   // segunda a sair apagar o estado da primeira, que ainda está em cena.
   const zonas = new Set();
-  const emZonaDeCta = () => zonas.size > 0;
-  ['#oferta', '.footer'].forEach((sel) => {
+
+  // O rodapé revelado é `position:fixed` e fica atrás do conteúdo, então
+  // está na viewport desde o topo da página. Observar interseção nele dava
+  // "em cena" o tempo todo e o CTA do canto nunca aparecia. Com o rodapé
+  // fixo o que marca a presença dele é ter chegado ao fim do rolar, que é
+  // quando o espaçador do `body::after` termina de descobri-lo. No mobile
+  // ele volta ao fluxo e aí a geometria normal vale de novo.
+  const rodape = document.querySelector('.footer');
+  let rodapeFixo = false;
+  let rodapeAlt = 0;
+  const medirZonaRodape = () => {
+    if (!rodape) return;
+    rodapeFixo = getComputedStyle(rodape).position === 'fixed';
+    rodapeAlt = rodape.offsetHeight;
+  };
+  medirZonaRodape();
+  window.addEventListener('resize', medirZonaRodape);
+
+  const noRodape = () => {
+    if (!rodape) return false;
+    if (!rodapeFixo) {
+      const r = rodape.getBoundingClientRect();
+      return r.top < window.innerHeight && r.bottom > 0;
+    }
+    const fim = document.documentElement.scrollHeight - window.innerHeight;
+    return (fim - window.scrollY) <= rodapeAlt * 0.75;
+  };
+
+  const emZonaDeCta = () => zonas.size > 0 || noRodape();
+
+  ['#oferta'].forEach((sel) => {
     const alvo = document.querySelector(sel);
     if (!alvo) return;
     new IntersectionObserver(([e]) => {
