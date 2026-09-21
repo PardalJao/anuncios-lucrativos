@@ -7,8 +7,8 @@
 
 @font-face{font-family:Sentient;src:url("../assets/fonts/sentient-regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:Sentient;src:url("../assets/fonts/sentient-italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
-@font-face{font-family:"DM Sans";src:url("../assets/fonts/dm-sans-regular.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:"DM Sans";src:url("../assets/fonts/dm-sans-medium.ttf") format("truetype");font-weight:500 700;font-style:normal;font-display:swap}
+@font-face{font-family:"DM Sans";src:url("../assets/fonts/dm-sans-regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"DM Sans";src:url("../assets/fonts/dm-sans-medium.woff2") format("woff2");font-weight:500 700;font-style:normal;font-display:swap}
 
 :root{
   --paper:#f7f4ee;
@@ -158,16 +158,22 @@ h1,h2,h3,h4,h5,h6,
 .btn--ghost:hover{background:#f1ece1;color:var(--ink);box-shadow:none}
 .btn--small{min-height:44px;padding:10px 18px;font-size:13px;gap:16px}
 .btn--block{width:100%}
-.btn[aria-disabled="true"]{
+.btn[aria-disabled="true"],
+button.btn[disabled]{
   background:#e8e3d9;color:var(--muted);border-color:#ddd6c8;
   cursor:not-allowed;box-shadow:none;transform:none;pointer-events:none;
 }
 
+/* o botão sem link é um <button>: precisa herdar o que o <a> já tinha */
+button.btn{font-family:var(--sans);cursor:pointer;-webkit-appearance:none;appearance:none}
 .rolling-text{display:inline-flex;overflow:hidden;vertical-align:bottom}
 .rolling-char-wrapper{display:block;height:var(--roll-h);overflow:hidden}
 .rolling-char-space{display:block;width:.3em}
 .rolling-char-inner{display:block;transition:transform .5s var(--e-house);transition-delay:calc(var(--char-index) * 15ms)}
 .rolling-char-top,.rolling-char-bottom{display:block;height:var(--roll-h);line-height:var(--roll-h)}
+/* a letra de baixo é desenhada pelo CSS: como nó de texto ela dobrava cada
+   caractere em textContent e o nome acessível não batia com o visível */
+.rolling-char-bottom::after{content:attr(data-ch)}
 .btn:hover .rolling-char-inner,
 .nav__link:hover .rolling-char-inner{transform:translateY(calc(var(--roll-h) * -1))}
 

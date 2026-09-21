@@ -22,9 +22,13 @@ function applyConfig() {
     const icon = '<span class="btn__icon" aria-hidden="true"><svg class="ico" aria-hidden="true"><use href="#i-ne"/></svg></span>';
 
     if (inOffer && !hasLink) {
-      btn.innerHTML = (CFG.ctaTextoSemLink || 'Em breve') + icon;
-      btn.setAttribute('aria-disabled', 'true');
-      btn.removeAttribute('href');
+      const morto = document.createElement('button');
+      morto.type = 'button';
+      morto.disabled = true;
+      morto.className = btn.className;
+      morto.dataset.cta = '';
+      morto.innerHTML = (CFG.ctaTextoSemLink || 'Em breve') + icon;
+      btn.replaceWith(morto);
       return;
     }
 
@@ -155,7 +159,8 @@ function rollify(el) {
     if (ch === ' ') {
       const sp = document.createElement('span');
       sp.className = 'rolling-char-space';
-      roll.appendChild(sp);
+      sp.textContent = ' ';        // a largura vem do CSS; o espaço é para
+      roll.appendChild(sp);        // o texto visível bater com o aria-label
       return;
     }
     const wrap = document.createElement('span');
@@ -171,7 +176,7 @@ function rollify(el) {
 
     const bottom = document.createElement('span');
     bottom.className = 'rolling-char-bottom';
-    bottom.textContent = ch;
+    bottom.dataset.ch = ch;        // o texto vem do CSS, fora do textContent
 
     inner.append(top, bottom);
     wrap.appendChild(inner);
