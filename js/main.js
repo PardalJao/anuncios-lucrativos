@@ -480,6 +480,12 @@ function initHeaderScroll() {
   let escondido = false;
   let agendado = false;
 
+  // A barra de compra do rodapé é o reverso do cabeçalho: um entra
+  // quando o outro sai. Em vez de duplicar a leitura de direção lá,
+  // o cabeçalho anuncia a própria troca e quem quiser escuta.
+  const avisar = () => document.dispatchEvent(
+    new CustomEvent('cabecalho:escondido', { detail: { escondido } }));
+
   const aplicar = () => {
     agendado = false;
     const y = window.scrollY;
@@ -489,7 +495,7 @@ function initHeaderScroll() {
     if (y <= TOPO) {
       // encostou no topo: volta a ser barra de largura total
       header.classList.remove('is-detached', 'is-hidden');
-      escondido = false;
+      if (escondido) { escondido = false; avisar(); }
     } else {
       header.classList.add('is-detached');
 
@@ -499,6 +505,7 @@ function initHeaderScroll() {
         if (novo !== escondido) {
           escondido = novo;
           header.classList.toggle('is-hidden', escondido);
+          avisar();
         }
       }
     }
@@ -924,21 +931,37 @@ function initMotion() {
 function initStickyBar() {
   const bar = document.querySelector('[data-sticky]');
   const oferta = document.querySelector('#oferta');
-  const hero = document.querySelector('.hero');
-  if (!bar || !hero) return;
+  const ctaHero = document.querySelector('.hero__cta');
+  if (!bar) return;
 
   bar.hidden = false;
-  let pastHero = false;
-  let inOffer = false;
-  const sync = () => bar.classList.toggle('is-on', pastHero && !inOffer);
 
-  new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; sync(); },
-    { threshold: 0, rootMargin: '-60% 0px 0px 0px' }).observe(hero);
+  // Os dois nunca dividem a tela: descendo, o cabeçalho sai e a barra
+  // entra; subindo, a barra sai e o cabeçalho volta com o CTA. Na hero
+  // a barra não aparece em nenhuma direção — o botão da própria dobra
+  // já é o convite, e o cabeçalho volta sem CTA para não repetir.
+  let naHero = !!ctaHero;
+  let naOferta = false;
+  let descendo = false;
 
+  const sync = () => bar.classList.toggle(
+    'is-on', descendo && !naHero && !naOferta);
+
+  if (ctaHero) {
+    new IntersectionObserver(([e]) => { naHero = e.isIntersecting; sync(); },
+      { threshold: 0 }).observe(ctaHero);
+  }
+
+  // na oferta os botões da seção já estão em cena
   if (oferta) {
-    new IntersectionObserver(([e]) => { inOffer = e.isIntersecting; sync(); },
+    new IntersectionObserver(([e]) => { naOferta = e.isIntersecting; sync(); },
       { threshold: 0 }).observe(oferta);
   }
+
+  document.addEventListener('cabecalho:escondido', (e) => {
+    descendo = e.detail.escondido;
+    sync();
+  });
 }
 
 /* ───────────────────────────────────────────────────────────

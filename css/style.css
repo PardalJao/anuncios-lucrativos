@@ -1040,6 +1040,27 @@ main{background:var(--paper)}
   transform:translateY(105%);transition:transform .45s var(--e-out);
 }
 .sticky.is-on{transform:none}
+/* mesmo reflexo do botão do canto: a barra é o equivalente dele no
+   telefone, então varre igual enquanto está em cena */
+.sticky .btn{overflow:hidden}
+.sticky .btn::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(102deg,
+    transparent 26%,
+    rgba(255,255,255,.08) 38%,
+    rgba(255,255,255,.34) 47%,
+    rgba(255,255,255,.62) 51%,
+    rgba(255,255,255,.34) 55%,
+    rgba(255,255,255,.08) 64%,
+    transparent 76%);
+  background-size:230% 100%;background-position:170% 0;
+}
+.sticky.is-on .btn::after{
+  animation:reflexo 2.1s cubic-bezier(.35,.05,.25,1) .35s infinite;
+}
+@media(prefers-reduced-motion:reduce){
+  .sticky .btn::after{animation:none;background:none}
+}
 .sticky__price{font:500 13px/1.3 var(--sans)}
 .sticky__price small{display:block;font-size:10px;font-weight:400;color:var(--muted)}
 @media(max-width:800px){.sticky{display:flex}}
