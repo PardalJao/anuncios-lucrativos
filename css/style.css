@@ -603,6 +603,14 @@ html:not(.js) .hero__title{opacity:1}
   color:var(--muted);font-size:15px;line-height:1.85;max-width:300px;justify-self:end;
   padding-top:14px;border-top:1px solid var(--line);
 }
+/* Grupos que não podem se separar. A quebra natural desta dobra deixava
+   palavras penduradas no fim da linha ("anúncios na", "tentando") e
+   "difícil." sozinha na última. Prender o grupo empurra ele inteiro para
+   a linha de baixo. Só no desktop: em coluna única a medida é outra e
+   um nowrap aqui viraria estouro lateral. */
+@media(min-width:821px){
+  .junto{white-space:nowrap}
+}
 @media(max-width:820px){
   .agita__grid{grid-template-columns:1fr;gap:30px}
   .agita__aside{justify-self:start;max-width:none}
