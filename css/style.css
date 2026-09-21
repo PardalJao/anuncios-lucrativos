@@ -109,6 +109,27 @@ summary::-webkit-details-marker{display:none}
   display:block;font:500 11px/1.5 var(--sans);letter-spacing:.11em;
   text-transform:uppercase;color:var(--green);
 }
+
+/* Viúvas. O navegador escolhe as quebras para não deixar a última
+   linha com uma palavra só — e refaz a conta sozinho a cada largura,
+   que é o que uma amarra fixa não consegue: a viúva de 1440px não é a
+   mesma de 1200px. Vale em qualquer tela; `pretty` só escolhe entre
+   pontos de quebra que já existem, nunca estoura a caixa.
+   Onde não há solução (título de duas palavras) o navegador desiste e
+   mantém a quebra natural. */
+p,li,dt,dd,figcaption,blockquote,summary,
+h1,h2,h3,h4,h5,h6,
+.agita__text .w{text-wrap:pretty}
+
+/* Utilitário de quebra. Marca o grupo de palavras que não pode se
+   separar — normalmente a última palavra mais a anterior, para não
+   deixar viúva no fim do parágrafo, e às vezes um grupo do meio que
+   estava ficando pendurado no fim da linha. Prender o grupo empurra
+   ele inteiro para a linha seguinte, sem <br> fixo: o texto continua
+   um parágrafo só e reflui sozinho se a fonte ou a medida mudarem.
+   Vale em qualquer largura: cada grupo foi conferido do telefone ao
+   monitor largo para caber na medida mais apertada. */
+.junto{white-space:nowrap}
 .sec__head{display:grid;grid-template-columns:1.5fr 1fr;align-items:end;gap:64px;margin-bottom:clamp(36px,4vw,52px)}
 .sec__head .eyebrow{margin-bottom:22px}
 .sec__intro{max-width:360px;justify-self:end;color:var(--muted);font-size:16px;line-height:1.75;padding-bottom:5px}
@@ -605,14 +626,6 @@ html:not(.js) .hero__title{opacity:1}
 .agita__aside{
   color:var(--muted);font-size:15px;line-height:1.85;max-width:300px;justify-self:end;
   padding-top:14px;border-top:1px solid var(--line);
-}
-/* Grupos que não podem se separar. A quebra natural desta dobra deixava
-   palavras penduradas no fim da linha ("anúncios na", "tentando") e
-   "difícil." sozinha na última. Prender o grupo empurra ele inteiro para
-   a linha de baixo. Só no desktop: em coluna única a medida é outra e
-   um nowrap aqui viraria estouro lateral. */
-@media(min-width:821px){
-  .junto{white-space:nowrap}
 }
 @media(max-width:820px){
   .agita__grid{grid-template-columns:1fr;gap:30px}
