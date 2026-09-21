@@ -747,9 +747,12 @@ html:not(.js) .hero__title{opacity:1}
 .card__art svg [data-fill]{fill:var(--green);stroke:none}
 .card:hover .card__art *{animation-duration:1.2s}
 
-/* 01 — a isca desce, fisga e a água responde */
+/* 01 — o anzol desce, fisga e a água responde. Ponta e junta
+   arredondadas: num desenho de traço fino a quina deixa a curva do
+   anzol com cara de gancho de guindaste. */
+.art-hooks{stroke-linecap:round;stroke-linejoin:round}
 .art-hooks g:first-child{animation:iscaMergulha 4s ease-in-out infinite}
-@keyframes iscaMergulha{0%,100%{transform:translate(110px,10px)}50%{transform:translate(110px,20px)}}
+@keyframes iscaMergulha{0%,100%{transform:translate(110px,8px)}50%{transform:translate(110px,17px)}}
 .art-hooks .isca-brilho{animation:pisca 4s ease-in-out infinite}
 @keyframes pisca{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.5);opacity:1}}
 .art-hooks .isca-agua path{stroke-dasharray:4 5;animation:correnteza 4s linear infinite}
@@ -780,10 +783,13 @@ html:not(.js) .hero__title{opacity:1}
 /* 06 — o troféu vencedor se multiplica */
 .art-multiplica .mlt-trofeu{animation:trofeuPulsa 3.4s ease-in-out infinite}
 @keyframes trofeuPulsa{0%,100%{transform:translate(110px,44px) scale(1)}46%{transform:translate(110px,44px) scale(1.12)}}
+/* as cópias saem aos pares, uma para cada lado do troféu. O atraso é
+   por par, não por cópia: escalonando de uma em uma, a qualquer
+   instante as quatro estavam em fases diferentes e a cena lia como
+   dispersão, não como algo se multiplicando a partir do centro. */
 .art-multiplica .mlt-copia{transform-origin:50% 50%;animation:brota 3.4s ease-out infinite}
-.art-multiplica .mlt-copia:nth-child(2){animation-delay:-.85s}
-.art-multiplica .mlt-copia:nth-child(3){animation-delay:-1.7s}
-.art-multiplica .mlt-copia:nth-child(4){animation-delay:-2.55s}
+.art-multiplica .mlt-copia:nth-child(3),
+.art-multiplica .mlt-copia:nth-child(4){animation-delay:-1.7s}
 @keyframes brota{0%{transform:translate(0,0) scale(.3);opacity:0}28%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1);opacity:0}}
 
 /* 07 — a lâmpada acende quando a ideia chega */
@@ -826,6 +832,17 @@ html:not(.js) .hero__title{opacity:1}
   content:"";width:7px;height:7px;flex:0 0 7px;
   border-top:1.5px solid currentColor;border-right:1.5px solid currentColor;
   transform:rotate(45deg);
+}
+
+/* No telefone o trilho também fica preso, e a mesma conta vale: o
+   cartão inteiro precisa caber acima da barra de compra. Em tela
+   curta ele não cabe no tamanho normal, então a arte e os respiros
+   encolhem — só aqui, onde a altura é o que falta. */
+@media(max-width:979px) and (max-height:780px){
+  .entregaveis .card{padding:18px}
+  .entregaveis .card__art{height:78px;margin-bottom:14px}
+  .entregaveis .card p{margin-top:10px}
+  .entregaveis .card__foot{padding-top:12px;margin-top:14px}
 }
 
 /* Acima de 980px esta seção é pinada: tudo precisa caber numa tela só,

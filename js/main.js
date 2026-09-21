@@ -681,7 +681,11 @@ function initLayers() {
 
     // Uma seção pinada já está sob controle do ScrollTrigger: empilhar um
     // yPercent por cima briga com o transform do pin e faz a seção tremer.
-    const pinada = ScrollTrigger.getAll().some((t) => t.pin === anterior);
+    // Vale também quando o pin está DENTRO dela: um ancestral com
+    // transform vira o quadro de referência do `position:fixed`, e o
+    // elemento pinado passa a escorregar junto com a seção.
+    const pinada = ScrollTrigger.getAll().some(
+      (t) => t.pin && (t.pin === anterior || anterior.contains(t.pin)));
 
     if (!pinada) {
       // A folha que sai desliza mais devagar do que o scroll e a nova a
@@ -954,6 +958,51 @@ function initMotion() {
 
     // as durações são proporções do curso total, por isso o corrimento
     // horizontal e a pausa precisam bater com a divisão do `end`
+    tl.to(track, { x: () => -dist(), ease: 'none', duration: () => dist() || 1 })
+      .to({}, { duration: SEGURA });
+
+    return () => {
+      box.classList.remove('is-pinned');
+      tl.scrollTrigger?.kill();
+      tl.kill();
+      gsap.set(track, { x: 0 });
+    };
+  });
+
+  /* ── 10.5b O mesmo trilho no telefone ──────────────────
+     No dedo o carrossel nativo pedia um gesto lateral que quase
+     ninguém dá: quem rola a página em linha reta via só o primeiro
+     cartão e um pedaço do segundo, que é o "corte" que aparecia.
+     Aqui o scroll vertical move o trilho, como no desktop.
+
+     A diferença é o que fica preso: no desktop a seção inteira, com
+     título e tudo. Numa tela de telefone isso não cabe — só o cartão
+     já passa de 500px — e o rodapé dele ficaria fora de vista o
+     trilho todo. Então prende-se só a caixa do trilho: o título rola
+     e sai normalmente, e o cartão inteiro fica em cena. */
+  gsap.matchMedia().add('(max-width: 979px)', () => {
+    const box = document.querySelector('[data-hscroll]');
+    const track = document.querySelector('[data-htrack]');
+    if (!box || !track) return;
+
+    box.classList.add('is-pinned');
+    const dist = () => {
+      const cs = getComputedStyle(box);
+      const visivel = box.clientWidth
+        - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      return Math.max(0, track.scrollWidth - visivel);
+    };
+    // pausa curta no fim: o último cartão precisa de um instante em
+    // cena antes de a página voltar a rolar
+    const SEGURA = () => window.innerHeight * 0.3;
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: box, start: 'top 8%',
+        end: () => '+=' + (dist() + SEGURA()),
+        pin: true, scrub: 0.8, anticipatePin: 1, invalidateOnRefresh: true,
+      },
+    });
     tl.to(track, { x: () => -dist(), ease: 'none', duration: () => dist() || 1 })
       .to({}, { duration: SEGURA });
 
