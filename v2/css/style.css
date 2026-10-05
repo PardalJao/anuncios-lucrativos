@@ -281,6 +281,8 @@ body::after{
 .g-linha{display:flex;align-items:flex-start;gap:14px}
 .g{flex:var(--r) 1 0;min-width:0;aspect-ratio:var(--r);border-radius:16px;overflow:hidden;border:1px solid var(--linha);background:var(--painel)}
 .g img{width:100%;height:100%;object-fit:cover;filter:grayscale(.35) contrast(1.04);transition:filter .6s,transform 1.2s var(--e-out)}
+.g-faixas{display:none}
+@keyframes desliza{to{transform:translateX(calc(-50% - 5px))}}
 .g:hover img{filter:none;transform:scale(1.04)}
 
 /* ── 7. Oferta ──────────────────────────────────────────── */
@@ -432,10 +434,19 @@ details[open] .faq__mais::after{rotate:0deg}
   .mural__trilho{gap:10px}
   .mural figure{border-radius:12px}
   .nomes{gap:10px}
-  /* no telefone: retratos em dupla, paisagens na largura toda (--o reordena) */
+  /* no telefone o mosaico dá lugar a duas faixas que andam sozinhas (main.js) */
+  .js .galeria{display:none}
+  .g-faixas{display:grid;gap:10px;margin-inline:calc(var(--gutter) * -1);
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+            mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+  .g-faixa{overflow:hidden}
+  .g-faixa__trilho{display:flex;gap:10px;width:max-content;animation:desliza var(--dur,36s) linear infinite}
+  .g-faixa:nth-child(2) .g-faixa__trilho{animation-direction:reverse}
+  .g-faixas.is-parado .g-faixa__trilho,.g-faixa:active .g-faixa__trilho{animation-play-state:paused}
+  .g-faixas .g{flex:none;height:clamp(150px,44vw,190px);width:auto;aspect-ratio:var(--r);border-radius:12px}
+  /* sem JS, o mosaico vira grade de duas colunas */
   .galeria{grid-template-columns:1fr 1fr;gap:10px}
   .g-linha{display:contents}
-  .g{order:var(--o)}
   .g--cheia{grid-column:1/-1}
   .nome__tag{font-size:9.5px;letter-spacing:.1em}
   .nome__idx{top:12px;left:14px}
@@ -477,4 +488,5 @@ details[open] .faq__mais::after{rotate:0deg}
   *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
   .js [data-r]{opacity:1;transform:none}
   .problema__texto .w,.manifesto .w{opacity:1}
+  .g-faixa{overflow-x:auto}
 }

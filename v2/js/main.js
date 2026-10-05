@@ -170,6 +170,46 @@
     }).observe(mural);
   }
 
+  /* ── 5b. Galeria no telefone: duas faixas que andam sozinhas ─
+     O mosaico inteiro passava de 2.400px de rolagem no celular. As faixas
+     mostram as mesmas fotos, no formato delas, em ~380px. O CSS decide qual
+     das duas versões aparece; a escondida nem baixa imagem (loading=lazy). */
+  function faixasGaleria() {
+    const gal = document.querySelector('.galeria');
+    if (!gal) return;
+    const ordem = (f) => +f.style.getPropertyValue('--o') || 0;
+    const figs = [...gal.querySelectorAll('.g')].sort((a, b) => ordem(a) - ordem(b));
+    const metade = Math.ceil(figs.length / 2);
+    const linhas = [figs.slice(0, metade), figs.slice(metade)];
+
+    const caixa = document.createElement('div');
+    caixa.className = 'g-faixas';
+    linhas.forEach((linha, i) => {
+      const faixa = document.createElement('div');
+      faixa.className = 'g-faixa';
+      const trilho = document.createElement('div');
+      trilho.className = 'g-faixa__trilho';
+      trilho.style.setProperty('--dur', 34 + i * 6 + 's');
+      [false, true].forEach((copia) => {
+        linha.forEach((f) => {
+          const c = f.cloneNode(true);
+          c.removeAttribute('data-r');
+          // a segunda volta é só para o laço não ter emenda
+          if (copia) { c.setAttribute('aria-hidden', 'true'); c.querySelector('img').alt = ''; }
+          trilho.appendChild(c);
+        });
+      });
+      faixa.appendChild(trilho);
+      caixa.appendChild(faixa);
+    });
+    gal.after(caixa);
+
+    // fora da tela, para de gastar quadro
+    new IntersectionObserver(([e]) => {
+      caixa.classList.toggle('is-parado', !e.isIntersecting);
+    }).observe(caixa);
+  }
+
   /* ── 6. Matriz: casas que acendem em diagonal ────────────── */
   function matriz() {
     const grade = document.querySelector('[data-matriz]');
@@ -255,6 +295,7 @@
     aplicaConfig();
     palavras();
     matriz();
+    faixasGaleria();
     revela();
     contadores();
     mural();
