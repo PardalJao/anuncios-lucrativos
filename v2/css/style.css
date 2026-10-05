@@ -275,15 +275,11 @@ body::after{
 .nome--at{background:#000f9e}
 .nome--at > .nome__logo{height:72%}
 
-/* galeria: 4 retratos, 1 destaque 2×2 (time do G4) e 6 paisagens fecham 4×6 sem buraco */
-.galeria{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:clamp(150px,15vw,210px);gap:14px;
-  grid-template-areas:"a b b c" "a d d c" "f f e g" "f f e g" "s s h h" "k k l l"}
-.g--a{grid-area:a}.g--b{grid-area:b}.g--c{grid-area:c}.g--d{grid-area:d}
-.g--e{grid-area:e}.g--f{grid-area:f}.g--g{grid-area:g}.g--h{grid-area:h}
-.g--s{grid-area:s}.g--k{grid-area:k}.g--l{grid-area:l}
-/* o time do G4 é 16:9 e o card é quase quadrado: aproxima por baixo para sair o teto */
-.g--f img{scale:1.22;transform-origin:50% 95%}
-.g{border-radius:16px;overflow:hidden;border:1px solid var(--linha);background:var(--painel)}
+/* galeria em mosaico justificado: cada linha tem uma altura só e cada foto
+   cresce na proporção do formato dela (--r = largura/altura). Nada é cortado. */
+.galeria{display:grid;gap:14px}
+.g-linha{display:flex;align-items:flex-start;gap:14px}
+.g{flex:var(--r) 1 0;min-width:0;aspect-ratio:var(--r);border-radius:16px;overflow:hidden;border:1px solid var(--linha);background:var(--painel)}
 .g img{width:100%;height:100%;object-fit:cover;filter:grayscale(.35) contrast(1.04);transition:filter .6s,transform 1.2s var(--e-out)}
 .g:hover img{filter:none;transform:scale(1.04)}
 
@@ -398,8 +394,6 @@ details[open] .faq__mais::after{rotate:0deg}
   .card--matriz{grid-template-columns:1fr}
   .bonus__card:last-child{grid-column:1/-1}
   .mural{grid-template-columns:repeat(3,1fr)}
-  .galeria{grid-template-columns:repeat(2,1fr);grid-auto-rows:clamp(130px,30vw,230px);
-    grid-template-areas:"a c" "a c" "f f" "f f" "b b" "e g" "e g" "d d" "s s" "h h" "k k" "l l"}
   .nomes{grid-template-columns:repeat(2,1fr);grid-auto-rows:clamp(130px,30vw,230px);
     grid-template-areas:"np np" "np np" "ca hf" "ca hf" "pg g4" "pg at" "mu mu" "mu mu"}
   .oferta__painel{grid-template-columns:1fr}
@@ -437,8 +431,12 @@ details[open] .faq__mais::after{rotate:0deg}
   .mural.is-colunas{height:620px;gap:10px}
   .mural__trilho{gap:10px}
   .mural figure{border-radius:12px}
-  .galeria{gap:10px}
-  .nomes,.galeria{gap:10px}
+  .nomes{gap:10px}
+  /* no telefone: retratos em dupla, paisagens na largura toda (--o reordena) */
+  .galeria{grid-template-columns:1fr 1fr;gap:10px}
+  .g-linha{display:contents}
+  .g{order:var(--o)}
+  .g--cheia{grid-column:1/-1}
   .nome__tag{font-size:9.5px;letter-spacing:.1em}
   .nome__idx{top:12px;left:14px}
   .nome--marca > .nome__logo{top:34%;height:42%}
