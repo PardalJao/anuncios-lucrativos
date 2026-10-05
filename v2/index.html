@@ -479,14 +479,16 @@
   </div>
 </footer>
 
-<!-- Barra fixa do telefone: some no hero, na oferta e no rodapé -->
-<div class="barra" data-barra aria-hidden="true">
-  <div class="barra__info">
-    <span>Anúncios Lucrativos</span>
-    <b data-preco-barra>R$ 47,90</b>
-  </div>
-  <a class="btn btn--g" href="#oferta" data-cta tabindex="-1">Garantir minha vaga</a>
-</div>
+<!-- CTA flutuante: entra quando o botão do hero sai de cena e some onde já
+     existe compra grande na tela (oferta e rodapé). Direita no computador,
+     esquerda no telefone. -->
+<a class="fab" href="#oferta" data-fab aria-hidden="true" tabindex="-1">
+  <span class="fab__txt">
+    <span data-fab-txt>Garantir minha vaga</span>
+    <span class="fab__preco" data-fab-preco>R$ 47,90 · 7 dias de garantia</span>
+  </span>
+  <span class="fab__disco" aria-hidden="true"><svg class="ico"><use href="#i-ne"/></svg></span>
+</a>
 
 </body>
 </html>

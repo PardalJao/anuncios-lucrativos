@@ -35,14 +35,13 @@
 
     const valor = document.querySelector('[data-preco-valor]');
     const caixa = document.querySelector('[data-preco]');
-    const barra = document.querySelector('[data-preco-barra]');
-    if (!CFG.precoAVista) {
-      caixa && caixa.remove();
-      barra && barra.remove();
-    } else {
-      valor && (valor.textContent = CFG.precoAVista);
-      barra && (barra.textContent = CFG.precoAVista);
-    }
+    if (!CFG.precoAVista) caixa && caixa.remove();
+    else valor && (valor.textContent = CFG.precoAVista);
+
+    const fabTxt = document.querySelector('[data-fab-txt]');
+    const fabPreco = document.querySelector('[data-fab-preco]');
+    if (fabTxt) fabTxt.textContent = CFG.ctaTexto || 'Garantir minha vaga';
+    if (fabPreco) fabPreco.textContent = CFG.precoAVista ? `${CFG.precoAVista} · 7 dias de garantia` : '7 dias de garantia';
     const de = document.querySelector('[data-preco-de]');
     if (de && CFG.precoDe) { de.textContent = CFG.precoDe; de.hidden = false; }
     const parc = document.querySelector('[data-preco-parc]');
@@ -259,7 +258,7 @@
     }, { rootMargin: '200px 0px' }).observe(v);
   }
 
-  /* ── 9. Cabeçalho sólido, menu ativo e barra do telefone ─── */
+  /* ── 9. Cabeçalho sólido, menu ativo e CTA flutuante ────── */
   function navegacao() {
     const topo = document.querySelector('[data-topo]');
     const solido = () => topo.classList.toggle('is-solido', scrollY > 24);
@@ -276,11 +275,18 @@
     }, { rootMargin: '-45% 0px -50% 0px' });
     alvos.forEach((s) => ioMenu.observe(s));
 
-    // a barra some onde já existe um CTA grande na tela: hero, oferta e rodapé
-    const barra = document.querySelector('[data-barra]');
-    if (!barra) return;
+    // o flutuante só aparece onde não há outro botão de compra grande na tela:
+    // entra quando o do hero sai e some na oferta e no rodapé
+    const fab = document.querySelector('[data-fab]');
+    if (!fab) return;
     const estado = { hero: true, oferta: false, rodape: false };
-    const sync = () => barra.classList.toggle('is-on', !estado.hero && !estado.oferta && !estado.rodape);
+    const sync = () => {
+      const on = !estado.hero && !estado.oferta && !estado.rodape;
+      fab.classList.toggle('is-on', on);
+      // escondido também para teclado e leitor de tela
+      fab.setAttribute('aria-hidden', on ? 'false' : 'true');
+      fab.tabIndex = on ? 0 : -1;
+    };
     const vigia = (sel, chave, margem) => {
       const el = document.querySelector(sel);
       if (!el) return;
