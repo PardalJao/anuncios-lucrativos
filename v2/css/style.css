@@ -308,6 +308,29 @@ body::after{
 .oferta__garantia{display:flex;align-items:center;gap:10px;font-size:14.5px;color:var(--suave);padding-top:16px;border-top:1px solid var(--linha);width:100%;justify-content:center}
 .oferta__garantia .ico{width:20px;height:20px;color:var(--ouro)}
 
+/* a dobra da oferta é a única dourada da página: faixa de ponta a ponta,
+   letra escura, e a caixa do preço em preto para o botão verde saltar */
+.oferta{--tinta:#17120a;--tinta-2:#4b3816;color:var(--tinta);
+  background:
+    radial-gradient(70% 90% at 15% 0%,rgba(255,244,214,.55),transparent 60%),
+    radial-gradient(60% 80% at 100% 100%,rgba(122,88,38,.45),transparent 65%),
+    linear-gradient(135deg,#ecd29c 0%,#d6b273 42%,#b8925a 100%)}
+.oferta::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
+  background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);
+  background-size:250% 100%;animation:brilho-ouro 7s ease-in-out infinite}
+@keyframes brilho-ouro{0%{background-position:150% 0}60%,100%{background-position:-50% 0}}
+.sec + .oferta::before,.oferta + .sec::before{display:none}
+.oferta .oferta__painel{border:0;background:none;padding:0;border-radius:0;overflow:visible}
+.oferta .oferta__brilho{display:none}
+.oferta .oferta__titulo{color:var(--tinta)}
+.oferta .oferta__titulo span{color:var(--tinta-2);font-weight:600}
+.oferta .lista-seta li{border-bottom-color:rgba(23,18,10,.16);color:var(--tinta)}
+.oferta .lista-seta .ico{color:var(--tinta)}
+.oferta .lista-seta--ouro li{color:var(--tinta);font-weight:700}
+.oferta .oferta__mais{color:var(--tinta-2);font-weight:500}
+.oferta .oferta__caixa{background:#0e0c09;border:1px solid rgba(23,18,10,.5);color:var(--texto);
+  box-shadow:0 50px 90px -40px rgba(60,40,10,.75),0 0 0 6px rgba(23,18,10,.08)}
+
 /* ── 8. Garantia ────────────────────────────────────────── */
 .garantia__grid{display:grid;grid-template-columns:auto 1fr;gap:clamp(32px,6vw,96px);align-items:center;max-width:1080px}
 .garantia__selo{position:relative;width:clamp(200px,22vw,280px);aspect-ratio:1;display:grid;place-items:center;border-radius:50%;
