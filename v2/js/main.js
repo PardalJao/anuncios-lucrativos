@@ -132,7 +132,7 @@
     let colsAtual = 0;
 
     const monta = () => {
-      const cols = telefone() ? 2 : innerWidth <= 1024 ? 3 : 4;
+      const cols = telefone() ? 2 : 3;
       if (cols === colsAtual) return;
       colsAtual = cols;
       const grupos = Array.from({ length: cols }, () => []);

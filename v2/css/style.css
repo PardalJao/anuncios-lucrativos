@@ -233,10 +233,10 @@ body::after{
 .bonus__card p{color:var(--suave);font-size:16px}
 
 /* ── 5. Mural de resultados ─────────────────────────────── */
-.mural{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+.mural{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;max-width:1080px;margin-inline:auto}
 .mural figure{border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--linha-2);box-shadow:0 24px 50px -30px rgba(0,0,0,.9)}
 .mural img{width:100%}
-.mural.is-colunas{display:flex;gap:14px;height:min(760px,90vh);overflow:hidden;
+.mural.is-colunas{display:flex;gap:14px;height:min(620px,80vh);overflow:hidden;
   -webkit-mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);
           mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent)}
 .mural__col{flex:1;min-width:0}
@@ -478,7 +478,6 @@ details[open] .faq__mais::after{rotate:0deg}
   .bonus__card:last-child{grid-column:1/-1}
   /* 3 cards em 2 colunas: o terceiro de cada grupo fecha a linha sozinho */
   .bento .card--num:nth-child(3),.bento .card--aula:last-child{grid-column:1/-1}
-  .mural{grid-template-columns:repeat(3,1fr)}
   .nomes{grid-template-columns:repeat(2,1fr);grid-auto-rows:clamp(130px,30vw,230px);
     grid-template-areas:"np np" "np np" "ca hf" "ca hf" "pg g4" "pg at" "mu mu" "mu mu"}
   .oferta__painel{grid-template-columns:1fr}
@@ -521,7 +520,7 @@ details[open] .faq__mais::after{rotate:0deg}
   .card .card__grande{font-size:68px;margin:10px 0 2px}
   .matriz__grade{gap:4px}
   .mural{grid-template-columns:repeat(2,1fr)}
-  .mural.is-colunas{height:620px;gap:10px}
+  .mural.is-colunas{height:500px;gap:10px}
   .mural__trilho{gap:10px}
   .mural figure{border-radius:12px}
   .nomes{gap:10px}
