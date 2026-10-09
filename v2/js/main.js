@@ -124,51 +124,6 @@
     els.forEach((el) => io.observe(el));
   }
 
-  /* ── 5. Mural de resultados em colunas que rolam ─────────── */
-  function mural() {
-    const mural = document.querySelector('[data-mural]');
-    if (!mural || reduzido) return;
-    const itens = [...mural.children];
-    let colsAtual = 0;
-
-    const monta = () => {
-      const cols = telefone() ? 2 : 3;
-      if (cols === colsAtual) return;
-      colsAtual = cols;
-      const grupos = Array.from({ length: cols }, () => []);
-      itens.forEach((it, i) => grupos[i % cols].push(it));
-      mural.textContent = '';
-      mural.classList.add('is-colunas');
-      grupos.forEach((g, i) => {
-        const col = document.createElement('div');
-        col.className = 'mural__col';
-        const trilho = document.createElement('div');
-        trilho.className = 'mural__trilho';
-        // a segunda volta é cópia decorativa: some do leitor de tela
-        g.forEach((it) => trilho.appendChild(it));
-        g.forEach((it) => {
-          const c = it.cloneNode(true);
-          c.setAttribute('aria-hidden', 'true');
-          c.querySelector('img').alt = '';
-          trilho.appendChild(c);
-        });
-        trilho.style.setProperty('--dur', (cols === 2 ? 46 : 58) + i * 9 + 's');
-        col.appendChild(trilho);
-        mural.appendChild(col);
-      });
-    };
-    monta();
-    let t;
-    addEventListener('resize', () => { clearTimeout(t); t = setTimeout(monta, 200); });
-
-    // fora da tela, para de gastar quadro
-    new IntersectionObserver(([e]) => {
-      mural.querySelectorAll('.mural__trilho').forEach((tr) => {
-        tr.style.animationPlayState = e.isIntersecting ? '' : 'paused';
-      });
-    }).observe(mural);
-  }
-
   /* ── 5b. Galeria no telefone: duas faixas que andam sozinhas ─
      O mosaico inteiro passava de 2.400px de rolagem no celular. As faixas
      mostram as mesmas fotos, no formato delas, em ~380px. O CSS decide qual
@@ -304,7 +259,6 @@
     faixasGaleria();
     revela();
     contadores();
-    mural();
     brilho();
     video();
     navegacao();

@@ -233,17 +233,11 @@ body::after{
 .bonus__card p{color:var(--suave);font-size:16px}
 
 /* ── 5. Mural de resultados ─────────────────────────────── */
-.mural{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start;max-width:1080px;margin-inline:auto}
-.mural figure{border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--linha-2);box-shadow:0 24px 50px -30px rgba(0,0,0,.9)}
+/* painel de depoimentos parado: cada card é um recorte já editado
+   (nome e foto borrados, trecho em destaque), em colunas que se encaixam */
+.mural{columns:3;column-gap:14px;max-width:1080px;margin-inline:auto}
+.mural figure{break-inside:avoid;margin:0 0 14px;border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--linha-2);box-shadow:0 24px 50px -30px rgba(0,0,0,.9)}
 .mural img{width:100%}
-.mural.is-colunas{display:flex;gap:14px;height:min(620px,80vh);overflow:hidden;
-  -webkit-mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);
-          mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent)}
-.mural__col{flex:1;min-width:0}
-.mural__trilho{display:flex;flex-direction:column;gap:14px;animation:sobe var(--dur,60s) linear infinite}
-.mural__col:nth-child(even) .mural__trilho{animation-direction:reverse}
-.mural:hover .mural__trilho{animation-play-state:paused}
-@keyframes sobe{to{transform:translateY(calc(-50% - 7px))}}
 
 /* ── 6. Trajetória ──────────────────────────────────────── */
 /* mural dos nomes: foto grande, nome grande — tem que dar para reconhecer de longe */
@@ -520,10 +514,8 @@ details[open] .faq__mais::after{rotate:0deg}
   .bento .card--num:nth-child(3),.bento .card--aula:last-child{grid-column:auto}
   .card .card__grande{font-size:68px;margin:10px 0 2px}
   .matriz__grade{gap:4px}
-  .mural{grid-template-columns:repeat(2,1fr)}
-  .mural.is-colunas{height:500px;gap:10px}
-  .mural__trilho{gap:10px}
-  .mural figure{border-radius:12px}
+  .mural{columns:2;column-gap:10px}
+  .mural figure{margin-bottom:10px;border-radius:12px}
   .nomes{gap:10px}
   /* no telefone o mosaico dá lugar a duas faixas que andam sozinhas (main.js) */
   .js .galeria{display:none}
